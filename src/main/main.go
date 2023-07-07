@@ -1,12 +1,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/storage"
@@ -21,6 +24,16 @@ func init() {
 
 var topWindow fyne.Window
 var metadataFileName string
+
+type numEntry struct {
+	widget.Entry
+}
+
+// func (n *numEntry) FocusLost() {
+// 	if n.Validate() != nil {
+// 		dialog.ShowError(errors.New(n.Validate().Error()), topWindow)
+// 	}
+// }
 
 func main() {
 	a := app.New()
@@ -42,17 +55,30 @@ func main() {
 	var fileChooser *dialog.FileDialog
 
 	numOfRowsLbl := widget.NewRichText(&widget.TextSegment{Text: "Number of rows", Style: widget.RichTextStyle{Alignment: fyne.TextAlignTrailing, ColorName: widget.RichTextStyleCodeInline.ColorName}})
-	numOfRowsEntry := widget.NewEntry()
+	numOfRowsEntry := &numEntry{}
+	numOfRowsEntry.ExtendBaseWidget(numOfRowsEntry)
 	numOfRowsEntry.SetPlaceHolder("Enter number of rows")
+	numOfRowsEntry.Validator = validation.NewRegexp(`^[1-9][0-9]*$`, "Number of rows must be greater than zero")
 
 	metadataFileLbl := widget.NewRichText(&widget.TextSegment{Text: "Metadata file", Style: widget.RichTextStyle{Alignment: fyne.TextAlignTrailing, ColorName: widget.RichTextStyleCodeInline.ColorName}})
 	metadataFileEntry := widget.NewEntry()
 	metadataFileEntry.Disable()
 	metadataFileEntry.SetPlaceHolder("Metadata file path")
-	fileChooser = dialog.NewFileOpen(func(r fyne.URIReadCloser, _ error) {
+	fileChooser = dialog.NewFileOpen(func(r fyne.URIReadCloser, err error) {
 		// data, _ := ioutil.ReadAll(r)
 		// result := fyne.NewStaticResource("name", data)
 		// fileContents := string(result.StaticContent)
+		if err != nil {
+			log.Print("Error occured while choosing the metadata file\n")
+			log.Print(err)
+			return
+		}
+
+		if r == nil {
+			log.Print("cancelled")
+			return
+		}
+
 		fileName := r.URI().Path()
 		// log.Print("inside:" + fileName)
 		metadataFileEntry.SetText(fileName)
@@ -66,6 +92,17 @@ func main() {
 	// fileUploadBtn.Resize(fyne.Size{Width: 10, Height: 30})
 
 	generateDataBtn := widget.NewButton("Generate Data", func() {
+		if numOfRowsEntry.Validate() != nil {
+			dialog.ShowError(errors.New(numOfRowsEntry.Validate().Error()), topWindow)
+			topWindow.Canvas().Focus(numOfRowsEntry)
+			// numOfRowsEntry.SetText("")
+			return
+		}
+		if len(metadataFileName) == 0 || !strings.HasSuffix(metadataFileName, ".json") {
+			dialog.ShowError(errors.New("Invalid metadata file path found"), topWindow)
+			return
+		}
+		log.Print(numOfRowsEntry.Text)
 		log.Print(metadataFileName)
 	})
 
