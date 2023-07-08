@@ -85,11 +85,11 @@ func main() {
 		persistFileName(fileName)
 	}, w)
 	fileChooser.SetFilter(storage.NewExtensionFileFilter([]string{".json"}))
+	fileChooser.Resize(fyne.NewSize(500, 400))
 
 	fileUploadBtn := widget.NewButton("Choose file", func() {
 		fileChooser.Show()
 	})
-	// fileUploadBtn.Resize(fyne.Size{Width: 10, Height: 30})
 
 	generateDataBtn := widget.NewButton("Generate Data", func() {
 		if numOfRowsEntry.Validate() != nil {
@@ -102,18 +102,22 @@ func main() {
 			dialog.ShowError(errors.New("Invalid metadata file path found"), topWindow)
 			return
 		}
-		log.Print(numOfRowsEntry.Text)
-		log.Print(metadataFileName)
+		log.Print("Number of rows:", numOfRowsEntry.Text)
+		log.Print("Metadata file path:", metadataFileName)
 	})
+
+	resultPane := widget.NewMultiLineEntry()
+	resultPane.SetMinRowsVisible(4)
 
 	// title.Move(fyne.NewPos(20, 20))
 	// content := container.NewBorder(titleContainer, nil, nil, nil, nil)
-	content := container.New(layout.NewVBoxLayout(), titleContainer, container.New(
-		layout.NewAdaptiveGridLayout(3),
-		numOfRowsLbl, numOfRowsEntry, layout.NewSpacer(),
-		metadataFileLbl, metadataFileEntry, fileUploadBtn,
-		layout.NewSpacer(), generateDataBtn, layout.NewSpacer(),
-	),
+	content := container.NewVBox(titleContainer,
+		container.NewGridWithColumns(3,
+			numOfRowsLbl, numOfRowsEntry, layout.NewSpacer(),
+			metadataFileLbl, metadataFileEntry, fileUploadBtn,
+			layout.NewSpacer(), generateDataBtn, layout.NewSpacer(),
+		),
+		container.NewCenter(container.New(layout.NewGridWrapLayout(fyne.NewSize(500, 200)), resultPane)),
 	)
 	w.SetContent(content)
 	w.SetFixedSize(true)
