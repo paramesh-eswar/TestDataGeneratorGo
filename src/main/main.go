@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"fyne.io/fyne/v2"
@@ -23,6 +24,7 @@ func init() {
 }
 
 var topWindow fyne.Window
+var numOfRows int
 var metadataFileName string
 
 type numEntry struct {
@@ -91,6 +93,10 @@ func main() {
 		fileChooser.Show()
 	})
 
+	resultPane := widget.NewMultiLineEntry()
+	resultPane.SetMinRowsVisible(4)
+	resultPane.Wrapping = fyne.TextWrapBreak
+
 	generateDataBtn := widget.NewButton("Generate Data", func() {
 		if numOfRowsEntry.Validate() != nil {
 			dialog.ShowError(errors.New(numOfRowsEntry.Validate().Error()), topWindow)
@@ -102,15 +108,19 @@ func main() {
 			dialog.ShowError(errors.New("Invalid metadata file path found"), topWindow)
 			return
 		}
-		log.Print("Number of rows:", numOfRowsEntry.Text)
-		log.Print("Metadata file path:", metadataFileName)
+
+		numOfRowsInt, err := strconv.Atoi(numOfRowsEntry.Text)
+		if err != nil {
+			resultPane.SetText(err.Error())
+		}
+
+		numOfRows = numOfRowsInt
+
+		output := generateData()
+		resultPane.SetText("Output from test data generator:\n" + output)
 	})
 
-	resultPane := widget.NewMultiLineEntry()
-	resultPane.SetMinRowsVisible(4)
-
 	// title.Move(fyne.NewPos(20, 20))
-	// content := container.NewBorder(titleContainer, nil, nil, nil, nil)
 	content := container.NewVBox(titleContainer,
 		container.NewGridWithColumns(3,
 			numOfRowsLbl, numOfRowsEntry, layout.NewSpacer(),
