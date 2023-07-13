@@ -16,17 +16,17 @@ func generateData() string {
 	log.Print("Number of rows:", numOfRows)
 	log.Print("Metadata file path:", metadataFileName)
 	// reading the metadata file
-	dat, err := os.ReadFile(metadataFileName)
+	metadataFileReader, err := os.ReadFile(metadataFileName)
 	var metaDataJson []map[string]interface{}
 	if err != nil {
 		return err.Error()
 	}
-	isMetadataSchemaValid := json.Valid(dat)
+	isMetadataSchemaValid := json.Valid(metadataFileReader)
 	var errorMsg string
 	if !isMetadataSchemaValid {
 		errorMsg = "Invalid metadata json schema\n"
 	}
-	if err := json.Unmarshal(dat, &metaDataJson); err != nil {
+	if err := json.Unmarshal(metadataFileReader, &metaDataJson); err != nil {
 		errorMsg += err.Error()
 	}
 	if len(errorMsg) > 0 {
@@ -34,7 +34,24 @@ func generateData() string {
 	}
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
-	schemaErrors := validateMetadataJsonSchema(metaDataJson)
+
+	desciptorJsonReader, err := os.ReadFile("resources/descriptor.json")
+	var descriptorJson []map[string]interface{}
+	if err != nil {
+		return err.Error()
+	}
+	isDesciptorJsonValid := json.Valid(desciptorJsonReader)
+	if !isDesciptorJsonValid {
+		errorMsg = "Invalid descriptor json file\n"
+	}
+	if err := json.Unmarshal(desciptorJsonReader, &descriptorJson); err != nil {
+		errorMsg += err.Error()
+	}
+	if len(errorMsg) > 0 {
+		return errorMsg
+	}
+
+	schemaErrors := validateMetadataJsonSchema(metaDataJson, descriptorJson)
 	if schemaErrors != "" && len(schemaErrors) > 0 {
 		return schemaErrors
 	}
@@ -42,7 +59,7 @@ func generateData() string {
 	return "success"
 }
 
-func validateMetadataJsonSchema(metaDataJson []map[string]interface{}) string {
+func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descriptorJson []map[string]interface{}) string {
 	// we can also use validator package from https://github.com/go-playground/validator
 	var errorMessage strings.Builder
 	dataGenType = make(map[string]interface{})
@@ -289,14 +306,48 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}) string {
 				}
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
-		case "ssn":
-			fmt.Println("SSN")
+		case "ssn", "email", "phonenumber":
+			fmt.Println("SSN/Email/Phone Number")
+			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
+				if (jsonAttr["duplicates_allowed"] == nil) ||
+					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
+					(!(strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "no")) && !(strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes"))) {
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property duplicates_allowed\n")
+					continue
+				} else {
+					if (strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) != "") && strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes") {
+						dataGenType[jsonAttr["name"].(string)] = RANDOM
+					} else {
+						dataGenType[jsonAttr["name"].(string)] = NATURAL_SEQ
+					}
+				}
+			} else {
+				dataGenType[jsonAttr["name"].(string)] = DEFAULT
+			}
 		case "creditcard":
 			fmt.Println("CreditCard")
-		case "email":
-			fmt.Println("Email")
-		case "phonenumber":
-			fmt.Println("Phone Number")
+			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
+				if (jsonAttr["duplicates_allowed"] == nil) ||
+					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
+					(!(strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "no")) && !(strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes"))) {
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property duplicates_allowed\n")
+					continue
+				} else {
+					if (strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) != "") && strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes") {
+						dataGenType[jsonAttr["name"].(string)] = RANDOM
+					} else {
+						dataGenType[jsonAttr["name"].(string)] = NATURAL_SEQ
+					}
+				}
+				if (jsonAttr["cctype"] == nil) || (strings.TrimSpace(jsonAttr["cctype"].(string)) == "") {
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property cctype\n")
+					continue
+				} else {
+
+				}
+			} else {
+				dataGenType[jsonAttr["name"].(string)] = DEFAULT
+			}
 		case "zipcode":
 			fmt.Println("Zip code")
 		case "uuid":
