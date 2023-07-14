@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 var dataGenType map[string]interface{}
@@ -35,8 +38,13 @@ func generateData() string {
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
 
-	desciptorJsonReader, err := os.ReadFile("resources/descriptor.json")
-	var descriptorJson []map[string]interface{}
+	descriptorFilePath, err := filepath.Abs("src/main/resources/descriptor.json")
+	if err != nil {
+		return err.Error()
+	}
+	desciptorJsonReader, err := os.ReadFile(descriptorFilePath)
+	fmt.Println(descriptorFilePath)
+	var descriptorJson map[string]interface{}
 	if err != nil {
 		return err.Error()
 	}
@@ -59,7 +67,7 @@ func generateData() string {
 	return "success"
 }
 
-func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descriptorJson []map[string]interface{}) string {
+func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descriptorJson map[string]interface{}) string {
 	// we can also use validator package from https://github.com/go-playground/validator
 	var errorMessage strings.Builder
 	dataGenType = make(map[string]interface{})
@@ -232,7 +240,7 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				}
 			} else {
 				if _, err := time.Parse(jsonAttr["date_format"].(string), strings.TrimSpace(jsonAttr["default_value"].(string))); err != nil {
-					errorMessage.WriteString(jsonAttr["name"].(string) + ": default value should be in the given date format\n")
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": default value should be in the choosen date format " + jsonAttr["date_format"].(string) + "\n")
 					continue
 				}
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
@@ -306,8 +314,8 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				}
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
-		case "ssn", "email", "phonenumber":
-			fmt.Println("SSN/Email/Phone Number")
+		case "ssn", "email", "phonenumber", "aadhar":
+			fmt.Println("SSN/Email/Phone Number/Aadhar")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -343,21 +351,89 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property cctype\n")
 					continue
 				} else {
-
+					cctypes := (descriptorJson["creditcard"].(map[string]interface{}))["cctypes"].([]interface{})
+					cctypesList := make([]string, len(cctypes))
+					for i, v := range cctypes {
+						cctypesList[i] = fmt.Sprintf(v.(string))
+					}
+					if !strings.EqualFold(jsonAttr["cctype"].(string), "any") && !slices.Contains(cctypesList, jsonAttr["cctype"].(string)) {
+						errorMessage.WriteString(jsonAttr["name"].(string) + ": cctype value should be in the list " + strings.Join(cctypesList, ", ") + "\n")
+						continue
+					}
 				}
 			} else {
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
-		case "zipcode":
-			fmt.Println("Zip code")
-		case "uuid":
-			fmt.Println("UUID")
+		case "zipcode", "uuid":
+			fmt.Println("Zip code/UUID")
+			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
+				dataGenType[jsonAttr["name"].(string)] = RANDOM
+			} else {
+				dataGenType[jsonAttr["name"].(string)] = DEFAULT
+			}
 		case "ipaddress":
 			fmt.Println("IP Address")
+			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
+				if (jsonAttr["ipaddress_type"] == nil) || (strings.TrimSpace(jsonAttr["ipaddress_type"].(string)) == "") {
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property ipaddress_type\n")
+					continue
+				} else {
+					iptypes := (descriptorJson["ipaddress"].(map[string]interface{}))["iptypes"].([]interface{})
+					iptypesList := make([]string, len(iptypes))
+					for i, v := range iptypes {
+						iptypesList[i] = fmt.Sprintf(v.(string))
+					}
+					if !strings.EqualFold(jsonAttr["ipaddress_type"].(string), "any") && !slices.Contains(iptypesList, jsonAttr["ipaddress_type"].(string)) {
+						errorMessage.WriteString(jsonAttr["name"].(string) + ": ipaddress_type value should be in the list " + strings.Join(iptypesList, ", ") + "\n")
+						continue
+					}
+				}
+				dataGenType[jsonAttr["name"].(string)] = RANDOM
+			} else {
+				dataGenType[jsonAttr["name"].(string)] = DEFAULT
+			}
 		case "timestamp":
 			fmt.Println("Timestamp")
-		case "aadhar":
-			fmt.Println("Aadhar")
+			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
+				if (jsonAttr["range"] != nil) && (strings.TrimSpace(jsonAttr["range"].(string)) != "") {
+					timestampRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
+					if timestampRange != nil {
+						if (len(timestampRange) != 2) || (timestampRange[0] == "" || timestampRange[1] == "") {
+							errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property range\n")
+							continue
+						}
+						if (jsonAttr["timestamp_format"] != nil) && (strings.TrimSpace(jsonAttr["timestamp_format"].(string)) != "") {
+							// layout param in parse function should always a reference date e.g., 01/02/2006 03:04:05PM
+							timestampMin, errMin := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[0])
+							timestampMax, errMax := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[1])
+							if errMin != nil {
+								errorMessage.WriteString(jsonAttr["name"].(string) + ": invalid timestamp_format or timestamp value\n")
+								errorMessage.WriteString(errMin.Error())
+								continue
+							}
+							if errMax != nil {
+								errorMessage.WriteString(jsonAttr["name"].(string) + ": invalid timestamp_format or timestamp value\n")
+								errorMessage.WriteString(errMax.Error())
+								continue
+							}
+							fmt.Println(timestampMin.Format(time.DateTime), " ", timestampMax.Format(time.DateTime))
+							if timestampMax.Compare(timestampMin) <= 0 {
+								errorMessage.WriteString(jsonAttr["name"].(string) + ": min timestamp should always less than are equal to max timestamp\n")
+								continue
+							}
+						}
+					}
+					dataGenType[jsonAttr["name"].(string)] = DUP_IN_RANGE
+				} else {
+					dataGenType[jsonAttr["name"].(string)] = RANDOM
+				}
+			} else {
+				if _, err := time.Parse(jsonAttr["timestamp_format"].(string), strings.TrimSpace(jsonAttr["default_value"].(string))); err != nil {
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": default value should be in the choosen timestamp format " + jsonAttr["timestamp_format"].(string) + "\n")
+					continue
+				}
+				dataGenType[jsonAttr["name"].(string)] = DEFAULT
+			}
 		}
 	}
 	return errorMessage.String()
