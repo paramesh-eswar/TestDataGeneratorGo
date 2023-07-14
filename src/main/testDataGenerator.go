@@ -43,7 +43,6 @@ func generateData() string {
 		return err.Error()
 	}
 	desciptorJsonReader, err := os.ReadFile(descriptorFilePath)
-	fmt.Println(descriptorFilePath)
 	var descriptorJson map[string]interface{}
 	if err != nil {
 		return err.Error()
@@ -71,12 +70,9 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 	// we can also use validator package from https://github.com/go-playground/validator
 	var errorMessage strings.Builder
 	dataGenType = make(map[string]interface{})
-	for index, jsonAttr := range metaDataJson {
-		fmt.Println("Index:", index)
-		fmt.Println("Attr:", jsonAttr)
+	for _, jsonAttr := range metaDataJson {
 		switch jsonAttr["datatype"] {
 		case "number":
-			fmt.Println("Number")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -120,7 +116,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "text":
-			fmt.Println("Text")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -154,7 +149,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "float":
-			fmt.Println("Float")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -204,7 +198,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "date":
-			fmt.Println("Date")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["range"] != nil) && (strings.TrimSpace(jsonAttr["range"].(string)) != "") {
 					dateRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
@@ -227,7 +220,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 								errorMessage.WriteString(errMax.Error())
 								continue
 							}
-							fmt.Println(dateMin.Format(time.DateOnly), " ", dateMax.Format(time.DateOnly))
 							if dateMax.Compare(dateMin) <= 0 {
 								errorMessage.WriteString(jsonAttr["name"].(string) + ": min date should always less than are equal to max date\n")
 								continue
@@ -246,7 +238,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "gender":
-			fmt.Println("Gender")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["format"] != nil) && (strings.TrimSpace(jsonAttr["format"].(string)) != "") {
 					genderFormat := strings.TrimSpace(jsonAttr["format"].(string))
@@ -281,7 +272,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "boolean":
-			fmt.Println("Boolean")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["format"] != nil) && (strings.TrimSpace(jsonAttr["format"].(string)) != "") {
 					boolFormat := strings.TrimSpace(jsonAttr["format"].(string))
@@ -315,7 +305,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "ssn", "email", "phonenumber", "aadhar":
-			fmt.Println("SSN/Email/Phone Number/Aadhar")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -333,7 +322,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "creditcard":
-			fmt.Println("CreditCard")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["duplicates_allowed"] == nil) ||
 					(strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) == "") ||
@@ -365,14 +353,12 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "zipcode", "uuid":
-			fmt.Println("Zip code/UUID")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				dataGenType[jsonAttr["name"].(string)] = RANDOM
 			} else {
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "ipaddress":
-			fmt.Println("IP Address")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["ipaddress_type"] == nil) || (strings.TrimSpace(jsonAttr["ipaddress_type"].(string)) == "") {
 					errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property ipaddress_type\n")
@@ -393,7 +379,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
 			}
 		case "timestamp":
-			fmt.Println("Timestamp")
 			if (jsonAttr["default_value"] == nil) || (strings.TrimSpace(jsonAttr["default_value"].(string)) == "") {
 				if (jsonAttr["range"] != nil) && (strings.TrimSpace(jsonAttr["range"].(string)) != "") {
 					timestampRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
@@ -416,7 +401,6 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 								errorMessage.WriteString(errMax.Error())
 								continue
 							}
-							fmt.Println(timestampMin.Format(time.DateTime), " ", timestampMax.Format(time.DateTime))
 							if timestampMax.Compare(timestampMin) <= 0 {
 								errorMessage.WriteString(jsonAttr["name"].(string) + ": min timestamp should always less than are equal to max timestamp\n")
 								continue
