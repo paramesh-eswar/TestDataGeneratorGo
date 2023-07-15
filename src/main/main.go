@@ -116,8 +116,11 @@ func main() {
 
 		numOfRows = numOfRowsInt
 
-		output := generateData()
-		resultPane.SetText("Output from test data generator:\n" + output)
+		output := validateMetadata()
+		if strings.EqualFold(output, "success") {
+			output = testDataGenerator()
+		}
+		resultPane.SetText("Output from test data generator:" + output)
 	})
 
 	// title.Move(fyne.NewPos(20, 20))
