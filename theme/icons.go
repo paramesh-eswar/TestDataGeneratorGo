@@ -7,9 +7,9 @@ func TdgLogo() fyne.Resource {
 }
 
 func LightThemeIcon() fyne.Resource {
-	return resourceTdglightthemeiconPng
+	return resourceLightthemeiconPng
 }
 
 func DarkThemeIcon() fyne.Resource {
-	return resourceTdgdarkthemeiconPng
+	return resourceDarkthemeiconPng
 }

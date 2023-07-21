@@ -73,19 +73,40 @@ func main() {
 	}
 
 	// title := canvas.NewText("Test Data Generator", color.Black)
-	title := widget.NewLabel("Test Data Generator")
-	title.TextStyle.Bold = true
+	// title := widget.NewLabel("Test Data Generator")
+	// title.TextStyle.Bold = true
+	title := widget.NewRichText(&widget.TextSegment{
+		Text: "Test Data Generator",
+		Style: widget.RichTextStyle{
+			Alignment: fyne.TextAlignCenter,
+			ColorName: widget.RichTextStyleCodeInline.ColorName,
+			TextStyle: fyne.TextStyle{Bold: true},
+			SizeName:  fyne.ThemeSizeName(theme.SizeNameHeadingText),
+		},
+	})
 	titleContainer := container.NewCenter(title)
 
 	var fileChooser *dialog.FileDialog
 
-	numOfRowsLbl := widget.NewRichText(&widget.TextSegment{Text: "Number of rows", Style: widget.RichTextStyle{Alignment: fyne.TextAlignTrailing, ColorName: widget.RichTextStyleCodeInline.ColorName}})
+	numOfRowsLbl := widget.NewRichText(&widget.TextSegment{
+		Text: "Number of rows",
+		Style: widget.RichTextStyle{
+			Alignment: fyne.TextAlignTrailing,
+			ColorName: widget.RichTextStyleCodeInline.ColorName,
+		},
+	})
 	numOfRowsEntry := &numEntry{}
 	numOfRowsEntry.ExtendBaseWidget(numOfRowsEntry)
 	numOfRowsEntry.SetPlaceHolder("Enter number of rows")
 	numOfRowsEntry.Validator = validation.NewRegexp(`^[1-9][0-9]*$`, "Number of rows must be greater than zero")
 
-	metadataFileLbl := widget.NewRichText(&widget.TextSegment{Text: "Metadata file", Style: widget.RichTextStyle{Alignment: fyne.TextAlignTrailing, ColorName: widget.RichTextStyleCodeInline.ColorName}})
+	metadataFileLbl := widget.NewRichText(&widget.TextSegment{
+		Text: "Metadata file",
+		Style: widget.RichTextStyle{
+			Alignment: fyne.TextAlignTrailing,
+			ColorName: widget.RichTextStyleCodeInline.ColorName,
+		},
+	})
 	metadataFileEntry := widget.NewEntry()
 	metadataFileEntry.Disable()
 	metadataFileEntry.SetPlaceHolder("Metadata file path")
@@ -144,7 +165,7 @@ func main() {
 		if strings.EqualFold(output, "success") {
 			output = testDataGenerator()
 		}
-		resultPane.SetText("Output from test data generator:" + output)
+		resultPane.SetText("Output from test data generator: " + output)
 	})
 
 	// title.Move(fyne.NewPos(20, 20))
@@ -152,13 +173,15 @@ func main() {
 		container.NewGridWithColumns(3,
 			layout.NewSpacer(), titleContainer, container.NewHBox(
 				layout.NewSpacer(),
-				tdgThemeBtn,
+				container.NewGridWrap(fyne.NewSize(50, 40), tdgThemeBtn),
 			),
+		),
+		container.NewGridWithColumns(3,
 			numOfRowsLbl, numOfRowsEntry, layout.NewSpacer(),
 			metadataFileLbl, metadataFileEntry, container.NewGridWrap(fyne.NewSize(150, 40), fileUploadBtn),
 			layout.NewSpacer(), generateDataBtn, layout.NewSpacer(),
 		),
-		container.NewCenter(container.New(layout.NewGridWrapLayout(fyne.NewSize(500, 200)), resultPane)),
+		container.NewCenter(container.New(layout.NewGridWrapLayout(fyne.NewSize(600, 200)), resultPane)),
 	)
 	w.SetContent(content)
 	w.SetFixedSize(true)
@@ -189,11 +212,11 @@ func tdgThemeBtnContainer(app fyne.App) *fyne.Container {
 	tdgThemeBtn := widget.NewButton("", func() {})
 	tdgThemeBtn.OnTapped = func() {
 		if lightThemeSelected {
-			app.Settings().SetTheme(theme.DarkTheme())
+			app.Settings().SetTheme(tdgTheme.MyTdgDarkTheme{})
 			lightThemeSelected = false
 			tdgThemeBtn.SetIcon(tdgTheme.LightThemeIcon())
 		} else {
-			app.Settings().SetTheme(theme.LightTheme())
+			app.Settings().SetTheme(tdgTheme.MyTdgLightTheme{})
 			lightThemeSelected = true
 			tdgThemeBtn.SetIcon(tdgTheme.DarkThemeIcon())
 		}
