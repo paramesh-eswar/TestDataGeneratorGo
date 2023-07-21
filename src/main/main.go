@@ -45,11 +45,11 @@ var lightThemeSelected bool = false
 
 func main() {
 	a := app.New()
-	tdgIcon, _ := fyne.LoadResourceFromPath("./theme/icons/tdg.png")
+	tdgIcon, _ := fyne.LoadResourceFromPath("./theme/icons/tdg_logo.png")
 	// a.SetIcon(theme.TdgLogo())
 	a.SetIcon(tdgIcon)
-	a.Settings().SetTheme(theme.DarkTheme())
-	// a.Settings().SetTheme(theme.MyTdgTheme{})
+	// a.Settings().SetTheme(theme.DarkTheme())
+	a.Settings().SetTheme(tdgTheme.MyTdgDarkTheme{})
 	// logLifecycle(a)
 	w := a.NewWindow("Test Data Generator")
 	w.Resize(fyne.NewSize(600, 400))
@@ -62,11 +62,11 @@ func main() {
 	tdgThemeBtn := widget.NewButtonWithIcon("", tdgTheme.LightThemeIcon(), nil)
 	tdgThemeBtn.OnTapped = func() {
 		if lightThemeSelected {
-			a.Settings().SetTheme(theme.DarkTheme())
+			a.Settings().SetTheme(tdgTheme.MyTdgDarkTheme{})
 			lightThemeSelected = false
 			tdgThemeBtn.SetIcon(tdgTheme.LightThemeIcon())
 		} else {
-			a.Settings().SetTheme(theme.LightTheme())
+			a.Settings().SetTheme(tdgTheme.MyTdgLightTheme{})
 			lightThemeSelected = true
 			tdgThemeBtn.SetIcon(tdgTheme.DarkThemeIcon())
 		}
@@ -150,9 +150,7 @@ func main() {
 	// title.Move(fyne.NewPos(20, 20))
 	content := container.NewVBox(
 		container.NewGridWithColumns(3,
-			layout.NewSpacer(), titleContainer, container.NewBorder(
-				layout.NewSpacer(),
-				layout.NewSpacer(),
+			layout.NewSpacer(), titleContainer, container.NewHBox(
 				layout.NewSpacer(),
 				tdgThemeBtn,
 			),

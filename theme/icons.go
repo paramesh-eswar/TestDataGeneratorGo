@@ -3,13 +3,13 @@ package theme
 import "fyne.io/fyne/v2"
 
 func TdgLogo() fyne.Resource {
-	return resourceTdgPng
+	return resourceTdglogoPng
 }
 
 func LightThemeIcon() fyne.Resource {
-	return resourceLightthemeiconPng
+	return resourceTdglightthemeiconPng
 }
 
 func DarkThemeIcon() fyne.Resource {
-	return resourceDarkthemeiconPng
+	return resourceTdgdarkthemeiconPng
 }
