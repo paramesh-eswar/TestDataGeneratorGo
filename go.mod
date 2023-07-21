@@ -1,4 +1,4 @@
-module github.com/paramesh-eswar/TestDataGeneratorGo
+module paramesh-eswar/TestDataGeneratorGo
 
 go 1.20
 
