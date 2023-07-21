@@ -5,6 +5,17 @@ go 1.20
 require github.com/brianvoe/gofakeit/v6 v6.22.0
 
 require (
+	fyne.io/setup v0.0.0-20230325225027-e5de4a66c608 // indirect
+	fyne.io/x/fyne v0.0.0-20211027195715-357fb402507f // indirect
+	github.com/ActiveState/termtest/conpty v0.5.0 // indirect
+	github.com/Azure/go-ansiterm v0.0.0-20170929234023-d6e3b3328b78 // indirect
+	github.com/creack/pty v1.1.11 // indirect
+	github.com/fyne-io/defyne v0.0.0-20230325225256-0ac496c5f8e0 // indirect
+	github.com/fyne-io/terminal v0.0.0-20211022214227-ef292b54d29a // indirect
+	golang.org/x/mod v0.11.0 // indirect
+)
+
+require (
 	fyne.io/fyne/v2 v2.3.5 // indirect
 	fyne.io/systray v1.10.1-0.20230602210930-b6a2d6ca2a7b // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

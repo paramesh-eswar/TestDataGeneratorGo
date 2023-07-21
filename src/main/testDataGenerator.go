@@ -1,13 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
 
 var output string
+var dataWriter bufio.Writer
 
 func testDataGenerator() string {
 	startTime := time.Now()
@@ -15,8 +20,24 @@ func testDataGenerator() string {
 	output += "Test data generation is in progress ...\n"
 
 	// test data generation logic starts
+	var rowBuilder strings.Builder
+	for _, jsonAttr := range metaDataJson {
+		rowBuilder.WriteString(jsonAttr["name"].(string) + ",")
+	}
+	headerRow := rowBuilder.String()
+	headerRow = headerRow[:len(headerRow)-1]
+	fmt.Println(headerRow)
+	outputFilePath := generateOutputFileName(metadataFileName)
+	fileToWrite, err := os.OpenFile(outputFilePath, os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return "Failed to create output file: " + outputFilePath
+	}
+	defer fileToWrite.Close()
+	dataWriter = *bufio.NewWriter(fileToWrite)
+	dataWriter.WriteString(headerRow)
+
 	tdgChannel := make(chan string, 1000)
-	numOfReaders := 10
+	const numOfReaders = 10
 	// numOfThreads := 10
 	rowCount := 1
 	var endCount int
@@ -31,14 +52,14 @@ func testDataGenerator() string {
 	for rowCount <= numOfRows {
 		senderGroup.Add(1)
 		// for i := 0; i < numOfThreads; i++ {
-		if rowCount <= numOfRows-10 {
-			endCount = rowCount + 10
+		if rowCount <= numOfRows-500 {
+			endCount = rowCount + 500
 		} else {
 			endCount = numOfRows + 1
 		}
-		go sendeRecord(tdgChannel, &senderGroup, rowCount, endCount, 1)
+		go sendeRecord(tdgChannel, &senderGroup, rowCount, endCount)
 		rowCount = endCount
-		if rowCount >= numOfRows {
+		if rowCount > numOfRows {
 			break
 		}
 		// }
@@ -50,29 +71,39 @@ func testDataGenerator() string {
 	}()
 
 	readerGroup.Wait()
+	dataWriter.Flush()
 	// test data generation logic ends
 
 	endTime := time.Now()
 	output += "Time taken to generate test data: " + strconv.FormatInt(((endTime.UnixMilli()-startTime.UnixMilli())/1000), 10) + " sec\n"
+	output += "Output file location: " + outputFilePath + "\n"
 	output += "Data generated successfully!"
 	return output
 }
 
-func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount int, threadNum int) {
+func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount int) {
 	// wg.Add(1)
-	fmt.Println("sender-", threadNum, ":", rowCount, ":", endCount)
+	fmt.Println("sender:", rowCount, ":", endCount-1)
 	for i := rowCount; i < endCount; i++ {
-		// time.Sleep(1 * time.Second)
 		tdgChannel <- strconv.Itoa(i)
 	}
 	defer wg.Done()
 }
 
 func readRecord(tdgChannel chan string, rg *sync.WaitGroup, readerNum int) {
-	fmt.Println("reader", readerNum)
 	for message := range tdgChannel {
-		// time.Sleep(2 * time.Second)
 		fmt.Println("reader", readerNum, ":", message)
 	}
 	defer rg.Done()
+}
+
+func generateOutputFileName(inputFilePath string) string {
+	inputFileDir := filepath.Dir(inputFilePath)
+	inputFileName := filepath.Base(inputFilePath)
+	inputFileExt := filepath.Ext(inputFileName)
+	inputFileNameWithoutExt := strings.TrimSuffix(inputFileName, inputFileExt) + "_output"
+	outputFileName := inputFileNameWithoutExt + inputFileExt
+	finalOutputFileName := filepath.Join(inputFileDir, outputFileName)
+	fmt.Println("Output file path:", finalOutputFileName)
+	return finalOutputFileName
 }

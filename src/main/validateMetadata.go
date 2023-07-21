@@ -14,13 +14,14 @@ import (
 )
 
 var dataGenType map[string]string
+var metaDataJson []map[string]interface{}
+var descriptorJson map[string]interface{}
 
 func validateMetadata() string {
 	log.Print("Number of rows:", numOfRows)
 	log.Print("Metadata file path:", metadataFileName)
 	// reading the metadata file
 	metadataFileReader, err := os.ReadFile(metadataFileName)
-	var metaDataJson []map[string]interface{}
 	if err != nil {
 		return err.Error()
 	}
@@ -43,7 +44,6 @@ func validateMetadata() string {
 		return err.Error()
 	}
 	desciptorJsonReader, err := os.ReadFile(descriptorFilePath)
-	var descriptorJson map[string]interface{}
 	if err != nil {
 		return err.Error()
 	}
