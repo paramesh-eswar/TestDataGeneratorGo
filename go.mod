@@ -1,4 +1,4 @@
-module paramesh-eswar/TestDataGeneratorGo
+module github.com/paramesh-eswar/TestDataGeneratorGo/v1
 
 go 1.20
 
@@ -48,4 +48,3 @@ require (
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
 
-replace com/dailycodestuff/tdg => paramesh-eswar/TestDataGeneratorGo v1.0.0
