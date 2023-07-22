@@ -48,3 +48,4 @@ require (
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
 
+replace paramesh-eswar/TestDataGeneratorGo => github.com/paramesh-eswar/TestDataGeneratorGo/v1 v1.0.0
