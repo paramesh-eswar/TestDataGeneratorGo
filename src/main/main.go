@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	tdgTheme "paramesh-eswar/TestDataGeneratorGo/theme"
+	tdgTheme "github.com/paramesh-eswar/TestDataGeneratorGo/theme"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
