@@ -1,4 +1,4 @@
-module com/dailycodestuff/tdg
+module github.com/paramesh-eswar/TestDataGeneratorGo
 
 go 1.20
 
