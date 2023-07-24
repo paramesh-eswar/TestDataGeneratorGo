@@ -39,7 +39,7 @@ func validateMetadata() string {
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
 
-	descriptorFilePath, err := filepath.Abs("resources/descriptor.json")
+	descriptorFilePath, err := filepath.Abs("./resources/descriptor.json")
 	if err != nil {
 		return err.Error()
 	}
