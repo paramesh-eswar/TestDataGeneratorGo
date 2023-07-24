@@ -11,7 +11,6 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/dialog"
@@ -30,33 +29,27 @@ func init() {
 var topWindow fyne.Window
 var numOfRows int
 var metadataFileName string
+var progressBar *widget.ProgressBar
 
 type numEntry struct {
 	widget.Entry
 }
 
-// func (n *numEntry) FocusLost() {
-// 	if n.Validate() != nil {
-// 		dialog.ShowError(errors.New(n.Validate().Error()), topWindow)
-// 	}
-// }
-
 var lightThemeSelected bool = false
+var PercentageCompleted = 0.0
+
+// var externalFloat binding.ExternalFloat
 
 func main() {
 	a := app.New()
 	tdgIcon := tdgTheme.TdgLogo()
-	// a.SetIcon(theme.TdgLogo())
 	a.SetIcon(tdgIcon)
-	// a.Settings().SetTheme(theme.DarkTheme())
 	a.Settings().SetTheme(tdgTheme.MyTdgDarkTheme{})
 	// logLifecycle(a)
 	w := a.NewWindow("Test Data Generator")
 	w.Resize(fyne.NewSize(600, 400))
 	w.SetMaster()
 	topWindow = w
-
-	// tdgContainer := tdgThemeBtnContainer(a)
 
 	// widget button to change the theme
 	tdgThemeBtn := widget.NewButtonWithIcon("", tdgTheme.LightThemeIcon(), nil)
@@ -72,9 +65,6 @@ func main() {
 		}
 	}
 
-	// title := canvas.NewText("Test Data Generator", color.Black)
-	// title := widget.NewLabel("Test Data Generator")
-	// title.TextStyle.Bold = true
 	title := widget.NewRichText(&widget.TextSegment{
 		Text: "Test Data Generator",
 		Style: widget.RichTextStyle{
@@ -142,11 +132,17 @@ func main() {
 	resultPane.Wrapping = fyne.TextWrapBreak
 	resultPane.Disable()
 
+	// progress bar
+	// externalFloat = binding.BindFloat(&PercentageCompleted)
+	// progressBar = widget.NewProgressBarWithData(externalFloat)
+	progressBar = widget.NewProgressBar()
+
 	generateDataBtn := widget.NewButton("Generate Data", func() {
+		// PercentageCompleted = 0.0
+		// externalFloat.Reload()
 		if numOfRowsEntry.Validate() != nil {
 			dialog.ShowError(errors.New(numOfRowsEntry.Validate().Error()), topWindow)
 			topWindow.Canvas().Focus(numOfRowsEntry)
-			// numOfRowsEntry.SetText("")
 			return
 		}
 		if len(metadataFileName) == 0 || !strings.HasSuffix(metadataFileName, ".json") {
@@ -162,13 +158,13 @@ func main() {
 		numOfRows = numOfRowsInt
 
 		output := validateMetadata()
+		fmt.Println(output)
 		if strings.EqualFold(output, "success") {
 			output = testDataGenerator()
 		}
 		resultPane.SetText("Output from test data generator: " + output)
 	})
 
-	// title.Move(fyne.NewPos(20, 20))
 	content := container.NewVBox(
 		container.NewGridWithColumns(3,
 			layout.NewSpacer(), titleContainer, container.NewHBox(
@@ -181,6 +177,7 @@ func main() {
 			metadataFileLbl, metadataFileEntry, container.NewGridWrap(fyne.NewSize(150, 40), fileUploadBtn),
 			layout.NewSpacer(), generateDataBtn, layout.NewSpacer(),
 		),
+		container.NewCenter(container.New(layout.NewGridWrapLayout(fyne.NewSize(600, 30)), progressBar)),
 		container.NewCenter(container.New(layout.NewGridWrapLayout(fyne.NewSize(600, 200)), resultPane)),
 	)
 	w.SetContent(content)
@@ -205,22 +202,4 @@ func logLifecycle(a fyne.App) {
 	a.Lifecycle().SetOnExitedForeground(func() {
 		log.Println("Lifecycle: Exited Foreground")
 	})
-}
-
-func tdgThemeBtnContainer(app fyne.App) *fyne.Container {
-	themeIconImage := canvas.NewImageFromResource(tdgTheme.LightThemeIcon())
-	tdgThemeBtn := widget.NewButton("", func() {})
-	tdgThemeBtn.OnTapped = func() {
-		if lightThemeSelected {
-			app.Settings().SetTheme(tdgTheme.MyTdgDarkTheme{})
-			lightThemeSelected = false
-			tdgThemeBtn.SetIcon(tdgTheme.LightThemeIcon())
-		} else {
-			app.Settings().SetTheme(tdgTheme.MyTdgLightTheme{})
-			lightThemeSelected = true
-			tdgThemeBtn.SetIcon(tdgTheme.DarkThemeIcon())
-		}
-	}
-	tdgContainer := container.New(layout.NewMaxLayout(), themeIconImage, tdgThemeBtn)
-	return tdgContainer
 }

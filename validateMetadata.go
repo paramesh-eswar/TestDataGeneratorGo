@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	_ "embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -19,7 +18,7 @@ var metaDataJson []map[string]interface{}
 var descriptorJson map[string]interface{}
 
 //go:embed resources/descriptor.json
-var descriptorJsonFilePath embed.FS
+var descriptorJsonFile embed.FS
 
 func validateMetadata() string {
 	log.Print("Number of rows:", numOfRows)
@@ -43,7 +42,7 @@ func validateMetadata() string {
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
 
-	descriptorJsonReader, err := descriptorJsonFilePath.ReadFile("resources/descriptor.json")
+	descriptorJsonReader, err := descriptorJsonFile.ReadFile("resources/descriptor.json")
 	if err != nil {
 		return err.Error()
 	}
