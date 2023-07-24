@@ -13,6 +13,7 @@ import (
 
 var output string
 var dataWriter bufio.Writer
+var processedRowCount int
 
 func testDataGenerator() string {
 	startTime := time.Now()
@@ -20,6 +21,8 @@ func testDataGenerator() string {
 	output += "Test data generation is in progress ...\n"
 
 	// test data generation logic starts
+	progressBar.SetValue(0)
+	processedRowCount = 1
 	var rowBuilder strings.Builder
 	for _, jsonAttr := range metaDataJson {
 		rowBuilder.WriteString(jsonAttr["name"].(string) + ",")
@@ -72,6 +75,7 @@ func testDataGenerator() string {
 
 	readerGroup.Wait()
 	dataWriter.Flush()
+	progressBar.SetValue(1)
 	// test data generation logic ends
 
 	endTime := time.Now()
@@ -92,7 +96,11 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 
 func readRecord(tdgChannel chan string, rg *sync.WaitGroup, readerNum int) {
 	for message := range tdgChannel {
-		fmt.Println("reader", readerNum, ":", message)
+		fmt.Println("reader", processedRowCount, ":", message)
+		PercentageCompleted = (float64(processedRowCount) / float64(numOfRows))
+		// externalFloat.Reload()
+		progressBar.SetValue(PercentageCompleted)
+		processedRowCount++
 	}
 	defer rg.Done()
 }

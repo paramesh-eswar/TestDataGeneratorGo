@@ -1,11 +1,11 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -16,6 +16,9 @@ import (
 var dataGenType map[string]string
 var metaDataJson []map[string]interface{}
 var descriptorJson map[string]interface{}
+
+//go:embed resources/descriptor.json
+var descriptorJsonFile embed.FS
 
 func validateMetadata() string {
 	log.Print("Number of rows:", numOfRows)
@@ -39,19 +42,15 @@ func validateMetadata() string {
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
 
-	descriptorFilePath, err := filepath.Abs("./resources/descriptor.json")
+	descriptorJsonReader, err := descriptorJsonFile.ReadFile("resources/descriptor.json")
 	if err != nil {
 		return err.Error()
 	}
-	desciptorJsonReader, err := os.ReadFile(descriptorFilePath)
-	if err != nil {
-		return err.Error()
-	}
-	isDesciptorJsonValid := json.Valid(desciptorJsonReader)
+	isDesciptorJsonValid := json.Valid(descriptorJsonReader)
 	if !isDesciptorJsonValid {
 		errorMsg = "Invalid descriptor json file\n"
 	}
-	if err := json.Unmarshal(desciptorJsonReader, &descriptorJson); err != nil {
+	if err := json.Unmarshal(descriptorJsonReader, &descriptorJson); err != nil {
 		errorMsg += err.Error()
 	}
 	if len(errorMsg) > 0 {
