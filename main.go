@@ -45,7 +45,7 @@ var lightThemeSelected bool = false
 
 func main() {
 	a := app.New()
-	tdgIcon, _ := fyne.LoadResourceFromPath("./theme/icons/tdg_logo.png")
+	tdgIcon := tdgTheme.TdgLogo()
 	// a.SetIcon(theme.TdgLogo())
 	a.SetIcon(tdgIcon)
 	// a.Settings().SetTheme(theme.DarkTheme())
