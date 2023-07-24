@@ -1,6 +1,6 @@
 # Variables
 APP_NAME = TestDataGenerator
-GO_FILES = *.go
+GO_FILES = .
 GO_CMD = go
 GO_BUILD = $(GO_CMD) build
 GO_TEST = $(GO_CMD) test
