@@ -140,6 +140,8 @@ func main() {
 	generateDataBtn := widget.NewButton("Generate Data", func() {
 		// PercentageCompleted = 0.0
 		// externalFloat.Reload()
+		resultPane.SetText("")
+
 		if numOfRowsEntry.Validate() != nil {
 			dialog.ShowError(errors.New(numOfRowsEntry.Validate().Error()), topWindow)
 			topWindow.Canvas().Focus(numOfRowsEntry)
@@ -158,7 +160,6 @@ func main() {
 		numOfRows = numOfRowsInt
 
 		output := validateMetadata()
-		fmt.Println(output)
 		if strings.EqualFold(output, "success") {
 			output = testDataGenerator()
 		}
