@@ -31,7 +31,7 @@ func testDataGenerator() string {
 		rowBuilder.WriteString(jsonAttr["name"].(string) + ",")
 	}
 	headerRow := rowBuilder.String()
-	headerRow = headerRow[:len(headerRow)-1] + "\n"
+	headerRow = headerRow[:len(headerRow)-1]
 	fmt.Println(headerRow)
 	outputFilePath := generateOutputFileName(metadataFileName)
 	fileToWrite, err := os.OpenFile(outputFilePath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
@@ -90,6 +90,7 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 	fmt.Println("sender:", rowCount, ":", endCount-1)
 	var rowBuilder strings.Builder
 	for i := rowCount; i < endCount; i++ {
+		rowBuilder.WriteString("\n")
 		for _, jsonAttr := range metaDataJson {
 			switch jsonAttr["datatype"] {
 			case "number":
@@ -117,9 +118,15 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
+					rowBuilder.WriteString(jsonAttr["name"].(string) + fmt.Sprint(i) + ",")
 				case SEQ_IN_RANGE:
+					textRange := jsonAttr["range"].([]interface{})
+					rowBuilder.WriteString(textRange[i-1].(string) + ",")
 				case DUP_IN_RANGE:
+					textRange := jsonAttr["range"].([]interface{})
+					rowBuilder.WriteString(textRange[(0+rand.Intn(len(textRange)-1))].(string) + ",")
 				case RANDOM:
+					rowBuilder.WriteString(gofakeit.Word() + ",")
 				}
 			case "float":
 				switch dataGenType[jsonAttr["name"].(string)] {
@@ -241,7 +248,7 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 			}
 		}
 		dataRow := rowBuilder.String()
-		dataRow = dataRow[:len(dataRow)-1] + "\n"
+		dataRow = dataRow[:len(dataRow)-1]
 		tdgChannel <- dataRow
 		rowBuilder.Reset()
 	}

@@ -163,7 +163,7 @@ func main() {
 		if strings.EqualFold(output, "success") {
 			output = testDataGenerator()
 		}
-		resultPane.SetText("Output from test data generator: " + output)
+		resultPane.SetText("Output from test data generator:\n" + output)
 	})
 
 	content := container.NewVBox(
