@@ -126,7 +126,8 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 					textRange := jsonAttr["range"].([]interface{})
 					if (textRange != nil) && strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "no") {
 						if len(textRange) == 0 {
-							errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property range\n")
+							// errorMessage.WriteString(jsonAttr["name"].(string) + ": Invalid value for the property range\n")
+							dataGenType[jsonAttr["name"].(string)] = NATURAL_SEQ
 							continue
 						}
 						if numOfRows > len(textRange) {
@@ -135,14 +136,17 @@ func validateMetadataJsonSchema(metaDataJson []map[string]interface{}, descripto
 						}
 						dataGenType[jsonAttr["name"].(string)] = SEQ_IN_RANGE
 					} else {
-						dataGenType[jsonAttr["name"].(string)] = DUP_IN_RANGE
+						if (strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) != "") && strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes") {
+							if len(textRange) > 0 {
+								dataGenType[jsonAttr["name"].(string)] = DUP_IN_RANGE
+							} else {
+								dataGenType[jsonAttr["name"].(string)] = RANDOM
+							}
+						}
 					}
 				} else {
-					if (strings.TrimSpace(jsonAttr["duplicates_allowed"].(string)) != "") && strings.EqualFold(jsonAttr["duplicates_allowed"].(string), "yes") {
-						dataGenType[jsonAttr["name"].(string)] = RANDOM
-					} else {
-						dataGenType[jsonAttr["name"].(string)] = NATURAL_SEQ
-					}
+					errorMessage.WriteString(jsonAttr["name"].(string) + ": missing range attribute\n")
+					continue
 				}
 			} else {
 				dataGenType[jsonAttr["name"].(string)] = DEFAULT
