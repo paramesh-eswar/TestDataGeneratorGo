@@ -96,7 +96,7 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 	for i := rowCount; i < endCount; i++ {
 		rowBuilder.WriteString("\n")
 		for _, jsonAttr := range metaDataJson {
-			// person := gofakeit.Person()
+			person := gofakeit.Person()
 			switch jsonAttr["datatype"] {
 			case "number":
 				switch dataGenType[jsonAttr["name"].(string)] {
@@ -236,8 +236,6 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
 				}
 			case "phonenumber":
@@ -245,8 +243,6 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
 				}
 			case "aadhar":
@@ -254,8 +250,6 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
 				}
 			case "creditcard":
@@ -263,44 +257,50 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
 				}
 			case "zipcode":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
-				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
+					rowBuilder.WriteString(person.Address.Zip + ",")
 				}
 			case "uuid":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
-				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
+					rowBuilder.WriteString(gofakeit.UUID() + ",")
 				}
 			case "ipaddress":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
-				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
+					iptypes := (descriptorJson["ipaddress"].(map[string]interface{}))["iptypes"].([]interface{})
+					iptypesList := make([]string, len(iptypes))
+					for i, v := range iptypes {
+						iptypesList[i] = fmt.Sprintf(v.(string))
+					}
+					if strings.EqualFold(strings.TrimSpace(jsonAttr["ipaddress_type"].(string)), "ipv4") {
+						rowBuilder.WriteString(gofakeit.IPv4Address() + ",")
+					} else if strings.EqualFold(strings.TrimSpace(jsonAttr["ipaddress_type"].(string)), "ipv6") {
+						rowBuilder.WriteString(gofakeit.IPv6Address() + ",")
+					} else {
+						rand.NewSource(time.Now().UnixNano())
+						if rand.Intn(2) == 0 {
+							rowBuilder.WriteString(gofakeit.IPv4Address() + ",")
+						} else {
+							rowBuilder.WriteString(gofakeit.IPv6Address() + ",")
+						}
+					}
 				}
 			case "timestamp":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
-				case SEQ_IN_RANGE:
-				case DUP_IN_RANGE:
 				case RANDOM:
 				}
 			}
