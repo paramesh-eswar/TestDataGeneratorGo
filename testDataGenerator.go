@@ -210,7 +210,7 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
 					// ssnRegEx := `^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$`
-					ssnRegEx := `^\d{3}-\d{2}-\d{4}$`
+					ssnRegEx := (descriptorJson["ssn"].(map[string]interface{}))["format"].(string)
 					ssnVal := gofakeit.Regex(ssnRegEx)
 					mu.Lock()
 					ssnList, found := (*attrLookups)[jsonAttr["name"].(string)]
@@ -228,7 +228,7 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Unlock()
 					rowBuilder.WriteString(ssnVal + ",")
 				case RANDOM:
-					ssnRegEx := `^\d{3}-\d{2}-\d{4}$`
+					ssnRegEx := (descriptorJson["ssn"].(map[string]interface{}))["format"].(string)
 					rowBuilder.WriteString(gofakeit.Regex(ssnRegEx) + ",")
 				}
 			case "email":
@@ -250,7 +250,26 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
+					aadharRegEx := (descriptorJson["aadhar"].(map[string]interface{}))["format"].(string)
+					aadharNum := gofakeit.Regex(aadharRegEx)
+					mu.Lock()
+					aadharList, found := (*attrLookups)[jsonAttr["name"].(string)]
+					if found {
+						for slices.Contains(aadharList, aadharNum) {
+							aadharNum = gofakeit.Regex(aadharRegEx)
+						}
+					} else {
+						aadharList = make([]string, numOfRows)
+					}
+					aadharList = append(aadharList, aadharNum)
+					mu.Unlock()
+					mu.Lock()
+					(*attrLookups)[jsonAttr["name"].(string)] = aadharList
+					mu.Unlock()
+					rowBuilder.WriteString(aadharNum + ",")
 				case RANDOM:
+					aadharRegEx := (descriptorJson["aadhar"].(map[string]interface{}))["format"].(string)
+					rowBuilder.WriteString(gofakeit.Regex(aadharRegEx) + ",")
 				}
 			case "creditcard":
 				switch dataGenType[jsonAttr["name"].(string)] {
