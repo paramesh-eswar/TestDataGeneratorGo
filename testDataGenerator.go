@@ -283,7 +283,14 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case RANDOM:
-					rowBuilder.WriteString(person.Address.Zip + ",")
+					countryName := person.Address.Country
+					fmt.Println(countryName)
+					postalMap := getPostalCodeMap(countryName)
+					if len(postalMap["Regex"]) > 0 {
+						rowBuilder.WriteString(gofakeit.Regex(postalMap["Regex"]) + ",")
+					} else {
+						rowBuilder.WriteString(person.Address.Zip + ",")
+					}
 				}
 			case "uuid":
 				switch dataGenType[jsonAttr["name"].(string)] {
@@ -330,6 +337,15 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 		rowBuilder.Reset()
 	}
 	defer wg.Done()
+}
+
+func getPostalCodeMap(countryName string) map[string]string {
+	for _, postalMap := range postalCodeJson {
+		if strings.EqualFold(strings.TrimSpace(postalMap["Country"]), strings.TrimSpace(countryName)) {
+			return postalMap
+		}
+	}
+	return nil
 }
 
 func readRecord(tdgChannel chan string, rg *sync.WaitGroup, dataWriter bufio.Writer) {
