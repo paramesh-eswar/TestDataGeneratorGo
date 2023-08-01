@@ -16,9 +16,10 @@ import (
 var dataGenType map[string]string
 var metaDataJson []map[string]interface{}
 var descriptorJson map[string]interface{}
+var postalCodeJson []map[string]string
 
-//go:embed resources/descriptor.json
-var descriptorJsonFile embed.FS
+//go:embed resources/*.json
+var configJsonFile embed.FS
 
 func validateMetadata() string {
 	log.Print("Number of rows:", numOfRows)
@@ -42,7 +43,7 @@ func validateMetadata() string {
 	// fmt.Println(metaDataJson)
 	// fmt.Println(metaDataJson[1]["name"])
 
-	descriptorJsonReader, err := descriptorJsonFile.ReadFile("resources/descriptor.json")
+	descriptorJsonReader, err := configJsonFile.ReadFile("resources/descriptor.json")
 	if err != nil {
 		return err.Error()
 	}
@@ -51,6 +52,21 @@ func validateMetadata() string {
 		errorMsg = "Invalid descriptor json file\n"
 	}
 	if err := json.Unmarshal(descriptorJsonReader, &descriptorJson); err != nil {
+		errorMsg += err.Error()
+	}
+	if len(errorMsg) > 0 {
+		return errorMsg
+	}
+
+	postalJsonReader, err := configJsonFile.ReadFile("resources/postal-codes.json")
+	if err != nil {
+		return err.Error()
+	}
+	isPostalJsonValid := json.Valid(postalJsonReader)
+	if !isPostalJsonValid {
+		errorMsg = "Invalid postal codes json file\n"
+	}
+	if err := json.Unmarshal(postalJsonReader, &postalCodeJson); err != nil {
 		errorMsg += err.Error()
 	}
 	if len(errorMsg) > 0 {
