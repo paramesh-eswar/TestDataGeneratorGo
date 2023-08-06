@@ -1,6 +1,14 @@
 # Variables
 APP_NAME = TestDataGenerator
-GO_FILES = *.go
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	APP_NAME = TestDataGenerator
+endif
+ifeq ($(OS),Windows_NT)
+	APP_NAME = TestDataGenerator.exe
+endif
+GO_FILES = $(wildcard *.go)
 GO_CMD = go
 GO_BUILD = $(GO_CMD) build
 GO_TEST = $(GO_CMD) test

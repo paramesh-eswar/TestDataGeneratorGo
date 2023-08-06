@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -24,7 +25,7 @@ func testDataGenerator() string {
 	var dataWriter bufio.Writer
 	startTime := time.Now()
 	output += "\n----------------------------------------------------------------\n"
-	output += "Test data generation is in progress ...\n"
+	output += "Test data generation for the row count: " + strconv.Itoa(numOfRows) + "\n"
 
 	// test data generation logic starts
 	progressBar.SetValue(0)
@@ -287,6 +288,8 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					fmt.Println(countryName)
 					postalMap := getPostalCodeMap(countryName)
 					if len(postalMap["Regex"]) > 0 {
+						zip, _ := regexp.Compile(postalMap["Regex"])
+						fmt.Println(zip.MatchString(gofakeit.Regex(postalMap["Regex"])))
 						rowBuilder.WriteString(gofakeit.Regex(postalMap["Regex"]) + ",")
 					} else {
 						rowBuilder.WriteString(person.Address.Zip + ",")
