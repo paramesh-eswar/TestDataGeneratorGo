@@ -27,7 +27,7 @@
     "Country": "American Samoa",
     "ISO": "AS",
     "Format": "NNNNN (optionally NNNNN-NNNN or NNNNN-NNNNNN)",
-    "Regex": "^\\d{5}(-\\d{4,6})*$"
+    "Regex": "^\\d{5}(-\\d{4,6})?$"
 }, {
     "Note": "Each parish now has its own post code.",
     "Country": "Andorra",
@@ -57,7 +57,7 @@
     "Country": "Argentina",
     "ISO": "AR",
     "Format": "1974-1998 NNNN; From 1999 ANNNNAAA",
-    "Regex": "^\\d{4}|[A-Za-z]\\d{4}[a-zA-Z]{3}$"
+    "Regex": "^\\d{4}|[A-Z]\\d{4}[A-Z]{3}$"
 }, {
     "Note": "Previously used NNNNNN system inherited from former Soviet Union.",
     "Country": "Armenia",
@@ -147,7 +147,7 @@
     "Country": "Bermuda",
     "ISO": "BM",
     "Format": "AA NN or AA AA",
-    "Regex": "^[A-Za-z]{2}\\s([A-Za-z]{2}|\\d{2})$"
+    "Regex": "^[A-Z]{2} ([A-Z]{2}|\\d{2})$"
 }, {
     "Note": "",
     "Country": "Bhutan",
@@ -183,31 +183,31 @@
     "Country": "Brazil",
     "ISO": "BR",
     "Format": "NNNNN-NNN (NNNNN from 1971 to 1992)",
-    "Regex": "^\\d{5}-\\d{3}$"
+    "Regex": "^\\d{5}(-\\d{3})?$"
 }, {
     "Note": "Single code used for all addresses.",
     "Country": "British Antarctic Territory",
     "ISO": "",
     "Format": "BIQQ 1ZZ",
-    "Regex": "^[Bb][Ii][Qq]{2}\\s{0,1}[1][Zz]{2}$"
+    "Regex": "^(BIQQ 1ZZ)$"
 }, {
     "Note": "UK territory, but not UK postcode.",
     "Country": "British Indian Ocean Territory",
     "ISO": "IO",
     "Format": "AAAANAA one code: BBND 1ZZ",
-    "Regex": "^[Bb]{2}[Nn][Dd]\\s{0,1}[1][Zz]{2}$"
+    "Regex": "^(BBND 1ZZ)$"
 }, {
     "Note": "Specifically, VG1110 through VG1160[1]",
     "Country": "British Virgin Islands",
     "ISO": "VG",
     "Format": "CCNNNN",
-    "Regex": "^[Vv][Gg]\\d{4}$"
+    "Regex": "^(VG)\\d{4}$"
 }, {
     "Note": "",
     "Country": "Brunei",
     "ISO": "BN",
     "Format": "AANNNN",
-    "Regex": "^[A-Za-z]{2}\\d{4}$"
+    "Regex": "^[A-Z]{2}\\d{4}$"
 }, {
     "Note": "",
     "Country": "Bulgaria",
@@ -243,7 +243,7 @@
     "Country": "Canada",
     "ISO": "CA",
     "Format": "ANA NAN",
-    "Regex": "^(?=[^DdFfIiOoQqUu\\d\\s])[A-Za-z]\\d(?=[^DdFfIiOoQqUu\\d\\s])[A-Za-z]\\s{0,1}\\d(?=[^DdFfIiOoQqUu\\d\\s])[A-Za-z]\\d$"
+    "Regex": "^[A-Z]\\d[A-Z] \\d[A-Z]\\d$"
 }, {
     "Note": "The first digit indicates the island.",
     "Country": "Cape Verde",
@@ -255,7 +255,7 @@
     "Country": "Cayman Islands",
     "ISO": "KY",
     "Format": "CCN-NNNN",
-    "Regex": "^[Kk][Yy]\\d[-\\s]{0,1}\\d{4}$"
+    "Regex": "^(KY)\\d-\\d{4}$"
 }, {
     "Note": "",
     "Country": "Central African Republic",
@@ -273,7 +273,7 @@
     "Country": "Chile",
     "ISO": "CL",
     "Format": "NNNNNNN (NNN-NNNN)",
-    "Regex": "^\\d{7}\\s\\(\\d{3}-\\d{4}\\)$"
+    "Regex": "^\\d{7}|(\\d{3}-\\d{4})$"
 }, {
     "Note": "A postal code or youbian (邮编) in a subordinate division will have the same first two digits as its governing one (see Political divisions of China. The postal services in Macau or Hong Kong Special Administrative Regions remain separate from Mainland China, with no post code system currently used.",
     "Country": "China",
@@ -315,7 +315,7 @@
     "Country": "Congo, Democratic Republic",
     "ISO": "CD",
     "Format": "- no codes -",
-    "Regex": "^[Cc][Dd]$"
+    "Regex": ""
 }, {
     "Note": "",
     "Country": "Cook Islands",
@@ -363,7 +363,7 @@
     "Country": "Czech Republic",
     "ISO": "CZ",
     "Format": "NNNNN (NNN NN)",
-    "Regex": "^\\d{5}\\s\\(\\d{3}\\s\\d{2}\\)$"
+    "Regex": "^\\d{5}|(\\d{3} \\d{2})$"
 }, {
     "Note": "Numbering follows the dispatch of postal trains from Copenhagen.[3] Also used by Greenland, e.g.: DK-3900 Nuuk.",
     "Country": "Denmark",
@@ -404,8 +404,8 @@
     "Note": "Used for all inbound mail to El Salvador. The postal office then distributes the mail internally depending on their destination.",
     "Country": "El Salvador",
     "ISO": "SV",
-    "Format": "1101",
-    "Regex": "^1101$"
+    "Format": "NNNN",
+    "Regex": "^\\d{4}$"
 }, {
     "Note": "",
     "Country": "Egypt",
@@ -431,6 +431,12 @@
     "Format": "NNNNN",
     "Regex": "^\\d{5}$"
 }, {
+    "Note": "The letter identifies one of the country's four districts.",
+    "Country": "Eswatini",
+    "ISO": "SZ",
+    "Format": "ANNN",
+    "Regex": "^[A-Z]\\d{3}$"
+}, {
     "Note": "The code is only used on a trial basis for Addis Ababa addresses.",
     "Country": "Ethiopia",
     "ISO": "ET",
@@ -441,13 +447,13 @@
     "Country": "Falkland Islands",
     "ISO": "FK",
     "Format": "AAAANAA one code: FIQQ 1ZZ",
-    "Regex": "^[Ff][Ii][Qq]{2}\\s{0,1}[1][Zz]{2}$"
+    "Regex": "^(FIQQ 1ZZ)$"
 }, {
     "Note": "Self-governing territory within the Kingdom of Denmark, but not Danish postcode.",
     "Country": "Faroe Islands",
     "ISO": "FO",
-    "Format": "NNN",
-    "Regex": "^\\d{3}$"
+    "Format": "CC-NNN",
+    "Regex": "^(FO)-\\d{3}$"
 }, {
     "Note": "",
     "Country": "Fiji",
@@ -485,11 +491,11 @@
     "Format": "- no codes -",
     "Regex": ""
 }, {
-    "Note": "Two digit postal zone goes after city name.",
+    "Note": "",
     "Country": "Gabon",
     "ISO": "GA",
-    "Format": "NN [city name] NN",
-    "Regex": "^\\d{2}\\s[a-zA-Z-_ ]\\s\\d{2}$"
+    "Format": "- no codes -",
+    "Regex": ""
 }, {
     "Note": "",
     "Country": "Gambia",
@@ -503,23 +509,11 @@
     "Format": "NNNN",
     "Regex": "^\\d{4}$"
 }, {
-    "Note": "Postleitzahl (PLZ)",
-    "Country": "Germany",
-    "ISO": "DE",
-    "Format": "NN",
-    "Regex": "^\\d{2}$"
-}, {
-    "Note": "Postleitzahl (PLZ)",
-    "Country": "Germany",
-    "ISO": "DE",
-    "Format": "NNNN",
-    "Regex": "^\\d{4}$"
-}, {
     "Note": "Postleitzahl (PLZ), introduced after the German reunification. Between 1989 and 1993 the old separate 4-digit postal codes of former West- and East-Germany were distinguished by preceding \"W-\" or \"O-\" ('Ost' for East).",
     "Country": "Germany",
     "ISO": "DE",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NN, NNNN, NNNNN",
+    "Regex": "^\\d{2}|\\d{4}|\\d{5}$"
 }, {
     "Note": "[citation needed]",
     "Country": "Ghana",
@@ -531,13 +525,13 @@
     "Country": "Gibraltar",
     "ISO": "GI",
     "Format": "GX11 1AA",
-    "Regex": "^[Gg][Xx][1]{2}\\s{0,1}[1][Aa]{2}$"
+    "Regex": "^(GX11 1AA)$"
 }, {
     "Note": "",
     "Country": "Greece",
     "ISO": "GR",
     "Format": "NNN NN",
-    "Regex": "^\\d{3}\\s{0,1}\\d{2}$"
+    "Regex": "^\\d{3} \\d{2}$"
 }, {
     "Note": "Part of the Danish postal code system.",
     "Country": "Greenland",
@@ -560,8 +554,8 @@
     "Note": "U.S. ZIP codes. Range 96910 - 96932.",
     "Country": "Guam",
     "ISO": "GU",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}|\\d{5}-\\d{4}$"
 }, {
     "Note": "The first two numbers identify the department, the third number the route and the last two the office.",
     "Country": "Guatemala",
@@ -573,13 +567,13 @@
     "Country": "Guernsey",
     "ISO": "GG",
     "Format": "AAN NAA, AANN NAA",
-    "Regex": "^[A-Za-z]{2}\\d\\s{0,1}\\d[A-Za-z]{2}$"
+    "Regex": "^(GY)\\d{1,2} \\d[A-Z]{2}$"
 }, {
     "Note": "",
     "Country": "Guinea",
     "ISO": "GN",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "NNN",
+    "Regex": "^\\d{3}$"
 }, {
     "Note": "",
     "Country": "Guinea Bissau",
@@ -599,17 +593,17 @@
     "Format": "NNNN",
     "Regex": "^\\d{4}$"
 }, {
-    "Note": "Part of the Australian postcode system.",
+    "Note": "",
     "Country": "Heard and McDonald Islands",
     "ISO": "HM",
-    "Format": "NNNN",
-    "Regex": "^\\d{4}$"
+    "Format": "",
+    "Regex": ""
 }, {
     "Note": "",
     "Country": "Honduras",
     "ISO": "HN",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "AANNNN, NNNNN",
+    "Regex": "^[A-Z]{2}\\d{4}|\\d{5}$"
 }, {
     "Note": "[1] The dummy postal code of Hong Kong is 999077 but it is unnecessary in fact",
     "Country": "Hong Kong",
@@ -632,8 +626,8 @@
     "Note": "Postal Index Number (PIN)",
     "Country": "India",
     "ISO": "IN",
-    "Format": "NNNNNN,&#10;NNN NNN",
-    "Regex": "^\\d{6}$"
+    "Format": "NNNNNN, NNN NNN",
+    "Regex": "^\\d{6}|\\d{3} \\d{3}$"
 }, {
     "Note": "Kode Pos. Included East Timor (ranges 88xxx and 89xxx) until 1999, no longer used. For Indonesia postal code information visit [2]",
     "Country": "Indonesia",
@@ -653,23 +647,23 @@
     "Format": "NNNNN",
     "Regex": "^\\d{5}$"
 }, {
-    "Note": "Currently no postal codes; however, Dublin is divided into postal districts on syntax Dublin 9. A national post code system is planned. See also Republic of Ireland postal addresses.",
+    "Note": "Ireland's postcode system (called Eircode) refers to individual properties – not to streets/areas. It is presented in the format A12 A1BC The first 3 characters are a routing key referring to a postal district, and the second 4 characters are a unique, pseudorandom identifier for individual properties. The codes are only used in full 7-character format",
     "Country": "Ireland",
     "ISO": "IE",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "ANA ANAA",
+    "Regex": "^[A-Z]\\d[A-Z] [A-Z]\\d[A-Z]{2}$"
 }, {
     "Note": "UK-format postcode. The first two letters are always IM.",
     "Country": "Isle of Man",
     "ISO": "IM",
     "Format": "CCN NAA, CCNN NAA",
-    "Regex": "^[Ii][Mm]\\d{1,2}\\s\\d\\[A-Z]{2}$"
+    "Regex": "^(IM)\\d{1,2} \\d\\[A-Z]{2}$"
 }, {
     "Note": "Postcode is always written BEFORE the city/place name, i.e. to the Right in Hebrew or Arabic script - to the Left in Latin script.  This also allows the legacy postal code version (even though deprecated) since it's still in high use.",
     "Country": "Israel",
     "ISO": "IL",
     "Format": "NNNNNNN, NNNNN",
-    "Regex": "^\\b\\d{5}(\\d{2})?$"
+    "Regex": "^\\d{5}(\\d{2})?$"
 }, {
     "Note": "Codice di Avviamento Postale (CAP). Also used by San Marino and Vatican City. First two digits identify province with some exceptions, because there are more than 100 provinces.",
     "Country": "Italy",
@@ -680,20 +674,20 @@
     "Note": "Jamaica currently has no national postal code system, except for Kingston and Lower St. Andrew, which are divided into postal districts numbered 1-20[4] &#10;Before the 2007 suspension, the first two letters of a national post code were always 'JM' (for Jamaica) while the third was for one of the four zones (A-D) into which the island was divided. The last two letters were for the parish, while the two digits were for the local post office.[5]",
     "Country": "Jamaica",
     "ISO": "JM",
-    "Format": "Before suspension: CCAAANN &#10;After suspension: NN",
+    "Format": "Before suspension: CCAAANN, After suspension: NN",
     "Regex": "^\\d{2}$"
 }, {
     "Note": "See also Japanese addressing system.",
     "Country": "Japan",
     "ISO": "JP",
-    "Format": "NNNNNNN (NNN-NNNN)",
-    "Regex": "^\\d{7}\\s\\(\\d{3}-\\d{4}\\)$"
+    "Format": "NNN-NNNN",
+    "Regex": "^\\d{3}-\\d{4}$"
 }, {
     "Note": "UK-format postcode.",
     "Country": "Jersey",
     "ISO": "JE",
-    "Format": "CCN NAA",
-    "Regex": "^[Jj][Ee]\\d\\s{0,1}\\d[A-Za-z]{2}$"
+    "Format": "CCN NAA, CCNN NAA",
+    "Regex": "^(JE)\\d{1,2} \\d[A-Z]{2}$"
 }, {
     "Note": "Deliveries to PO Boxes only.",
     "Country": "Jordan",
@@ -728,8 +722,8 @@
     "Note": "",
     "Country": "Korea, South",
     "ISO": "KR",
-    "Format": "NNNNNN (NNN-NNN)(1988~2015)",
-    "Regex": "^\\d{6}\\s\\(\\d{3}-\\d{3}\\)$"
+    "Format": "NNNNN, NNN-NNN(From 1988~2015), NNN-NN (From 1970-1988)",
+    "Regex": "^\\d{5}|\\d{3}-\\d{3}|\\d{3}-\\d{2}$"
 }, {
     "Note": "A separate postal code for Kosovo was introduced by the UNMIK postal administration in 2004. Serbian postcodes are still widely used in the Serbian enclaves. No country code has been assigned.",
     "Country": "Kosovo",
@@ -752,8 +746,8 @@
     "Note": "",
     "Country": "Latvia",
     "ISO": "LV",
-    "Format": "LV-NNNN",
-    "Regex": "^[Ll][Vv][- ]{0,1}\\d{4}$"
+    "Format": "CC-NNNN",
+    "Regex": "^(LV)-\\d{4}$"
 }, {
     "Note": "",
     "Country": "Laos",
@@ -764,8 +758,8 @@
     "Note": "The first four digits represent the region or postal zone,the last four digits represent the building see also Lebanon Postal code website.",
     "Country": "Lebanon",
     "ISO": "LB",
-    "Format": "NNNN NNNN",
-    "Regex": "^\\d{4}\\s{0,1}\\d{4}$"
+    "Format": "NNNNN, NNNN NNNN",
+    "Regex": "^\\d{5}|\\d{4} \\d{4}$"
 }, {
     "Note": "",
     "Country": "Lesotho",
@@ -782,8 +776,8 @@
     "Note": "",
     "Country": "Libya",
     "ISO": "LY",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "",
+    "Regex": ""
 }, {
     "Note": "With Switzerland, ordered from west to east. Range 9485 - 9498.",
     "Country": "Liechtenstein",
@@ -795,7 +789,7 @@
     "Country": "Lithuania",
     "ISO": "LT",
     "Format": "LT-NNNNN",
-    "Regex": "^[Ll][Tt][- ]{0,1}\\d{5}$"
+    "Regex": "^(LT)-\\d{5}$"
 }, {
     "Note": "References: http://www.upu.int/post_code/en/countries/LUX.pdf",
     "Country": "Luxembourg",
@@ -803,7 +797,7 @@
     "Format": "NNNN",
     "Regex": "^\\d{4}$"
 }, {
-    "Note": "[2]",
+    "Note": "",
     "Country": "Macau",
     "ISO": "MO",
     "Format": "- no codes -",
@@ -824,14 +818,14 @@
     "Note": "",
     "Country": "Malawi",
     "ISO": "MW",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "NNNNNN",
+    "Regex": "^\\d{6}$"
 }, {
     "Note": "",
     "Country": "Maldives",
     "ISO": "MV",
-    "Format": "NNNN, NNNNN",
-    "Regex": "^\\d{4,5}$"
+    "Format": "NNNNN",
+    "Regex": "^\\d{5}$"
 }, {
     "Note": "",
     "Country": "Malaysia",
@@ -848,14 +842,14 @@
     "Note": "Kodiċi Postali",
     "Country": "Malta",
     "ISO": "MT",
-    "Format": "AAANNNN (AAA NNNN)",
-    "Regex": "^[A-Za-z]{3}\\s{0,1}\\d{4}$"
+    "Format": "AAA NNNN",
+    "Regex": "^[A-Z]{3} \\d{4}$"
 }, {
     "Note": "U.S. ZIP codes. Range 96960 - 96970.",
     "Country": "Marshall Islands",
     "ISO": "MH",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}|\\d{5}-\\d{4}$"
 }, {
     "Note": "",
     "Country": "Mauritania",
@@ -866,8 +860,8 @@
     "Note": "",
     "Country": "Mauritius",
     "ISO": "MU",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "NNNNN",
+    "Regex": "^\\d{5}$"
 }, {
     "Note": "Overseas Department of France. French codes used. Range 97200 - 97290.",
     "Country": "Martinique",
@@ -884,8 +878,8 @@
     "Note": "US ZIP Code. Range 96941 - 96944.",
     "Country": "Micronesia",
     "ISO": "FM",
-    "Format": "NNNNN or NNNNN-NNNN",
-    "Regex": "^\\d{5}(-{1}\\d{4})$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}(-\\d{4})?$"
 }, {
     "Note": "The first two digits identify the state (or a part thereof), except for Nos. 00 to 16, which indicate delegaciones (boroughs) of the Federal District (Mexico City).",
     "Country": "Mexico",
@@ -896,14 +890,14 @@
     "Note": "U.S. ZIP codes. Range 96941 - 96944.",
     "Country": "Micronesia",
     "ISO": "FM",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}(-\\d{4})?$"
 }, {
     "Note": "",
     "Country": "Moldova",
     "ISO": "MD",
-    "Format": "CCNNNN (CC-NNNN)",
-    "Regex": "^[Mm][Dd][- ]{0,1}\\d{4}$"
+    "Format": "CCNNNN, CC-NNNN",
+    "Regex": "^(MD)(-)?\\d{4}$"
 }, {
     "Note": "Uses the French Postal System, but with an \"MC\" Prefix for Monaco.",
     "Country": "Monaco",
@@ -926,8 +920,8 @@
     "Note": "",
     "Country": "Montserrat",
     "ISO": "MS",
-    "Format": "MSR 1110-1350",
-    "Regex": "^[Mm][Ss][Rr]\\s{0,1}\\d{4}$"
+    "Format": "MSR NNNN (Range 1110-1350)",
+    "Regex": "^(MSR) \\d{4}$"
 }, {
     "Note": "",
     "Country": "Morocco",
@@ -969,7 +963,7 @@
     "Country": "Netherlands",
     "ISO": "NL",
     "Format": "NNNN AA",
-    "Regex": "^\\d{4}\\s{0,1}[A-Za-z]{2}$"
+    "Regex": "^\\d{4} [A-Z]{2}$"
 }, {
     "Note": "Overseas Department of France. French codes used. Range 98800 - 98890.",
     "Country": "New Caledonia",
@@ -1016,8 +1010,8 @@
     "Note": "U.S. ZIP codes. Range 96950 - 96952.",
     "Country": "Northern Mariana Islands",
     "ISO": "MP",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}(-\\d{4})$"
 }, {
     "Note": "From south to north",
     "Country": "Norway",
@@ -1040,14 +1034,20 @@
     "Note": "U.S. ZIP codes. All locations 96940.",
     "Country": "Palau",
     "ISO": "PW",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, NNNNN-NNNN",
+    "Regex": "^\\d{5}(-\\d{4})$"
+}, {
+    "Note": "not yet implemented in practice. Codes 100-899 are in the Westbank, 900-999 in the Gaza Strip",
+    "Country": "Palestine",
+    "ISO": "PS",
+    "Format": "NNN",
+    "Regex": "^\\d{3}$"
 }, {
     "Note": "",
     "Country": "Panama",
     "ISO": "PA",
-    "Format": "NNNNNN",
-    "Regex": "^\\d{6}$"
+    "Format": "NNNN",
+    "Regex": "^\\d{4}$"
 }, {
     "Note": "",
     "Country": "Papua New Guinea",
@@ -1064,8 +1064,8 @@
     "Note": "",
     "Country": "Peru",
     "ISO": "PE",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN, CC NNNN",
+    "Regex": "^\\d{5}|(PE)\\d{4}$"
 }, {
     "Note": "",
     "Country": "Philippines",
@@ -1076,26 +1076,20 @@
     "Note": "UK territory, but not UK postcode",
     "Country": "Pitcairn Islands",
     "ISO": "PN",
-    "Format": "AAAANAA one code: PCRN 1ZZ",
-    "Regex": "^[Pp][Cc][Rr][Nn]\\s{0,1}[1][Zz]{2}$"
+    "Format": "AAAA NAA (one code: PCRN 1ZZ)",
+    "Regex": "^PCRN 1ZZ$"
 }, {
     "Note": "",
     "Country": "Poland",
     "ISO": "PL",
-    "Format": "NNNNN (NN-NNN)",
-    "Regex": "^\\d{2}[- ]{0,1}\\d{3}$"
+    "Format": "NN-NNN",
+    "Regex": "^\\d{2}-\\d{3}$"
 }, {
     "Note": "",
     "Country": "Portugal",
     "ISO": "PT",
-    "Format": "NNNN",
-    "Regex": "^\\d{4}$"
-}, {
-    "Note": "",
-    "Country": "Portugal",
-    "ISO": "PT",
-    "Format": "NNNN-NNN (NNNN NNN)",
-    "Regex": "^\\d{4}[- ]{0,1}\\d{3}$"
+    "Format": "NNNN, NNNN-NNN",
+    "Regex": "^\\d{4}(-\\d{3})?$"
 }, {
     "Note": "U.S. ZIP codes. ZIP codes 006XX for NW PR, 007XX for SE PR, in which XX designates the town or post office and 009XX for the San Juan Metropolitan Area, in which XX designates the area or borough of San Juan. The last four digits identify an area within the post office. For example 00716-2604: 00716-for the east section of the city of Ponce and 2604 for Aceitillo St. in the neighborhood of Los Caobos. US Post office is changing the PR address format to the American one: 1234 No Name Avenue, San Juan, PR 00901.",
     "Country": "Puerto Rico",
@@ -1136,20 +1130,20 @@
     "Note": "Single code used for all addresses.",
     "Country": "Saint Helena",
     "ISO": "SH",
-    "Format": "STHL 1ZZ",
-    "Regex": "^[Ss][Tt][Hh][Ll]\\s{0,1}[1][Zz]{2}$"
+    "Format": "AAAA 1ZZ (STHL 1ZZ)",
+    "Regex": "^(STHL 1ZZ)$"
 }, {
     "Note": "",
     "Country": "Saint Kitts and Nevis",
     "ISO": "KN",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "CCNNNN",
+    "Regex": "^(KN)\\d{4}$"
 }, {
     "Note": "",
     "Country": "Saint Lucia",
     "ISO": "LC",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "CCNN NNN",
+    "Regex": "^(LC)\\d{2} \\d{3}$"
 }, {
     "Note": "Overseas Collectivity of France. French codes used.",
     "Country": "Saint Martin",
@@ -1167,7 +1161,7 @@
     "Country": "Saint Vincent and the Grenadines",
     "ISO": "VC",
     "Format": "CCNNNN",
-    "Regex": "^[Vv][Cc]\\d{4}$"
+    "Regex": "^(VC)\\d{4}$"
 }, {
     "Note": "With Italy, uses a five-digit numeric CAP of Emilia Romagna. Range 47890 and 47899",
     "Country": "San Marino",
@@ -1185,7 +1179,7 @@
     "Country": "Saudi Arabia",
     "ISO": "SA",
     "Format": "NNNNN for PO Boxes. NNNNN-NNNN for home delivery.",
-    "Regex": "^\\d{5}(-{1}\\d{4})?$"
+    "Regex": "^\\d{5}(-\\d{4})?$"
 }, {
     "Note": "The letters CP or C.P. are often written in front of the postcode. This is not a country code, but simply an abbreviation for \"code postal\".",
     "Country": "Senegal",
@@ -1200,13 +1194,7 @@
     "Regex": "^\\d{5}$"
 }, {
     "Note": "",
-    "Country": "Serbia",
-    "ISO": "RS",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
-}, {
-    "Note": "",
-    "Country": "Seychelles",
+    "Country": "+",
     "ISO": "SC",
     "Format": "- no codes -",
     "Regex": ""
@@ -1223,35 +1211,23 @@
     "Format": "- no codes -",
     "Regex": ""
 }, {
-    "Note": "",
-    "Country": "Singapore",
-    "ISO": "SG",
-    "Format": "NN",
-    "Regex": "^\\d{2}$"
-}, {
-    "Note": "",
-    "Country": "Singapore",
-    "ISO": "SG",
-    "Format": "NNNN",
-    "Regex": "^\\d{4}$"
-}, {
     "Note": "Each building has its own unique postcode.",
     "Country": "Singapore",
     "ISO": "SG",
-    "Format": "NNNNNN",
-    "Regex": "^\\d{6}$"
+    "Format": "NNNNNN, NNNN, NN",
+    "Regex": "^\\d{6}|\\d{4}|\\d{2}$"
 }, {
     "Note": "with Czech Republic from west to east, Poštové smerovacie číslo (PSČ) - postal routing number.",
     "Country": "Slovakia",
     "ISO": "SK",
-    "Format": "NNNNN (NNN NN)",
-    "Regex": "^\\d{5}\\s\\(\\d{3}\\s\\d{2})$"
+    "Format": "NNN NN",
+    "Regex": "^\\d{3} \\d{2}$"
 }, {
     "Note": "",
     "Country": "Slovenia",
     "ISO": "SI",
-    "Format": "NNNN (CC-NNNN)",
-    "Regex": "^([Ss][Ii][- ]{0,1}){0,1}\\d{4}$"
+    "Format": "NNNN, CC-NNNN",
+    "Regex": "^((SI-)?)\\d{4}$"
 }, {
     "Note": "",
     "Country": "Solomon Islands",
@@ -1262,8 +1238,8 @@
     "Note": "A 5 digit code has been publicized, but never taken into use.",
     "Country": "Somalia",
     "ISO": "SO",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "AA NNNNN",
+    "Regex": "^[A-Z]{2} \\d{5}$"
 }, {
     "Note": "Postal codes are allocated to individual Post Office branches, some have two codes to differentiate between P.O. Boxes and street delivery addresses. Included Namibia (ranges 9000-9299) until 1992, no longer used.",
     "Country": "South Africa",
@@ -1275,13 +1251,13 @@
     "Country": "South Georgia and the South Sandwich Islands",
     "ISO": "GS",
     "Format": "SIQQ 1ZZ",
-    "Regex": "^[Ss][Ii][Qq]{2}\\s{0,1}[1][Zz]{2}$"
+    "Regex": "^(SIQQ 1ZZ)$"
 }, {
-    "Note": "",
+    "Note": "Previously NNN-NNN (1988~2015), NNN-NN (1970~1988)",
     "Country": "South Korea",
     "ISO": "KR",
-    "Format": "NNNNNN (NNN-NNN)",
-    "Regex": "^\\d{6}\\s\\(\\d{3}-\\d{3}\\)$"
+    "Format": "NNNNN, NNN-NNN, NNN-NN",
+    "Regex": "^\\d{5}|(\\d{3}-\\d{2,3})$"
 }, {
     "Note": "First two indicate the province, range 01-52",
     "Country": "Spain",
@@ -1311,13 +1287,13 @@
     "Country": "Swaziland",
     "ISO": "SZ",
     "Format": "ANNN",
-    "Regex": "^[A-Za-z]\\d{3}$"
+    "Regex": "^[A-Z]\\d{3}$"
 }, {
     "Note": "",
     "Country": "Sweden",
     "ISO": "SE",
-    "Format": "NNNNN (NNN NN)",
-    "Regex": "^\\d{3}\\s*\\d{2}$"
+    "Format": "NNN NN",
+    "Regex": "^\\d{3} \\d{2}$"
 }, {
     "Note": "With Liechtenstein, ordered from west to east. In Geneva and other big cities, like Basel, Bern, Zurich, there may be one or two digits after the name of the city when the generic City code (1211) is used instead of the area-specific code (1201, 1202...), e.g.: 1211 Geneva 13. The digit identifies the post office. This addressing is generally used for P.O. box deliveries.",
     "Country": "Switzerland",
@@ -1340,8 +1316,8 @@
     "Note": "The first three digits of the postal code are required; the last two digits are optional. Codes are known as youdi quhao (郵遞區號), and are also assigned to Senkaku Islands (Diaoyutai), though Japanese-administered, the Pratas Islands and the Spratly Islands. See List of postal codes in Taiwan.",
     "Country": "Taiwan",
     "ISO": "TW",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNN, NNN-NNN, NNN-NN",
+    "Regex": "^\\d{3}(-\\d{2,3})?$"
 }, {
     "Note": "Retained system from former Soviet Union.",
     "Country": "Tajikistan",
@@ -1352,8 +1328,8 @@
     "Note": "",
     "Country": "Tanzania",
     "ISO": "TZ",
-    "Format": "- no codes -",
-    "Regex": ""
+    "Format": "NNNNN",
+    "Regex": "^\\d{5}$"
 }, {
     "Note": "The first two specify the province, numbers as in ISO 3166-2:TH, the third and fourth digits specify a district (amphoe)",
     "Country": "Thailand",
@@ -1388,8 +1364,8 @@
     "Note": "Single code used for all addresses.",
     "Country": "Tristan da Cunha",
     "ISO": "SH",
-    "Format": "TDCU 1ZZ",
-    "Regex": "^[Tt][Dd][Cc][Uu]\\s{0,1}[1][Zz]{2}$"
+    "Format": "AAAA 1ZZ (single code will be used: TDCU 1ZZ)",
+    "Regex": "^(TDCU 1ZZ)$"
 }, {
     "Note": "",
     "Country": "Tunisia",
@@ -1412,8 +1388,8 @@
     "Note": "Single code used for all addresses.",
     "Country": "Turks and Caicos Islands",
     "ISO": "TC",
-    "Format": "TKCA 1ZZ",
-    "Regex": "^[Tt][Kk][Cc][Aa]\\s{0,1}[1][Zz]{2}$"
+    "Format": "AAAA 1ZZ (single code used for all: TKCA 1ZZ)",
+    "Regex": "^(TKCA 1ZZ)$"
 }, {
     "Note": "",
     "Country": "Tuvalu",
@@ -1442,14 +1418,14 @@
     "Note": "Known as the postcode. The first letter(s) indicate the postal area, such as the town or part of London. Placed on a separate line below the city (or county, if used). The UK postcode is made up of two parts separated by a space. These are known as the outward postcode and the inward postcode. The outward postcode is always one of the following formats: AN, ANN, AAN, AANN, ANA, AANA, AAA. The inward postcode is always formatted as NAA. A valid inward postcode never contains the letters: C, I, K, M, O or V. The British Forces Post Office has a different system, but as of 2012 has also adopted UK-style postcodes that begin with \"BF1\" for electronic compatibility.",
     "Country": "United Kingdom",
     "ISO": "GB",
-    "Format": "A(A)N(A/N)NAA (A[A]N[A/N] NAA)",
-    "Regex": "^[A-Z]{1,2}[0-9R][0-9A-Z]?\\s*[0-9][A-Z-[CIKMOV]]{2}"
+    "Format": "A[A]N[A/N] NAA",
+    "Regex": "^[A-Z]{1,2}\\d[0-9A-Z]? \\d[A-Z]{2}"
 }, {
     "Note": "Known as the ZIP Code with five digits 99999* or the ZIP+4 Code with nine digits 99999-9999* (while the minimum requirement is the first five digits, the U.S. Postal Service encourages everyone to use all nine). Also used by the former US Pacific Territories: Federated States of Micronesia; Palau; and the Marshall Islands, as well as in current US territories American Samoa, Guam, Northern Mariana Islands, Puerto Rico, and the United States Virgin Islands. An individual delivery point may be represented as an 11-digit number, but these are usually represented by Intelligent Mail barcode or formerly POSTNET bar code.",
     "Country": "United States",
     "ISO": "US",
     "Format": "NNNNN (optionally NNNNN-NNNN)",
-    "Regex": "^\\b\\d{5}\\b(?:[- ]{1}\\d{4})?$"
+    "Regex": "^\\d{5}(-\\d{4})?$"
 }, {
     "Note": "",
     "Country": "Uruguay",
@@ -1460,14 +1436,14 @@
     "Note": "U.S. ZIP codes. Range 00801 - 00851.",
     "Country": "U.S. Virgin Islands",
     "ISO": "VI",
-    "Format": "NNNNN",
-    "Regex": "^\\d{5}$"
+    "Format": "NNNNN (optionally NNNNN-NNNN)",
+    "Regex": "^\\d{5}(-\\d{4})?$"
 }, {
     "Note": "Почтовые индексы",
     "Country": "Uzbekistan",
     "ISO": "UZ",
-    "Format": "NNN NNN",
-    "Regex": "^\\d{3} \\d{3}$"
+    "Format": "NNNNNN",
+    "Regex": "^\\d{6}$"
 }, {
     "Note": "",
     "Country": "Vanuatu",
@@ -1478,20 +1454,20 @@
     "Note": "Single code used for all addresses. Part of the Italian postal code system.",
     "Country": "Vatican",
     "ISO": "VA",
-    "Format": "120",
-    "Regex": "^120$"
+    "Format": "00120",
+    "Regex": "^00120$"
 }, {
     "Note": "",
     "Country": "Venezuela",
     "ISO": "VE",
-    "Format": "NNNN or NNNN A",
-    "Regex": "^\\d{4}(\\s[a-zA-Z]{1})?$"
+    "Format": "NNNN or NNNN-A",
+    "Regex": "^\\d{4}(-[A-Z])?$"
 }, {
     "Note": "First two indicate a province.",
     "Country": "Vietnam",
     "ISO": "VN",
-    "Format": "NNNNNN",
-    "Regex": "^\\d{6}$"
+    "Format": "NNNNN",
+    "Regex": "^\\d{5}$"
 }, {
     "Note": "Overseas Department of France. French codes used. Range 98600 - 98690.",
     "Country": "Wallis and Futuna",
