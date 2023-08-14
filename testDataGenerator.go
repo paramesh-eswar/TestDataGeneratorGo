@@ -277,7 +277,24 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
+					creditCardNumber := getCreditCardNumber(jsonAttr)
+					mu.Lock()
+					creditCardNumList, found := (*attrLookups)[jsonAttr["name"].(string)]
+					if found {
+						for slices.Contains(creditCardNumList, creditCardNumber) {
+							creditCardNumber = getCreditCardNumber(jsonAttr)
+						}
+					} else {
+						creditCardNumList = make([]string, numOfRows)
+					}
+					creditCardNumList = append(creditCardNumList, creditCardNumber)
+					mu.Unlock()
+					mu.Lock()
+					(*attrLookups)[jsonAttr["name"].(string)] = creditCardNumList
+					mu.Unlock()
+					rowBuilder.WriteString(creditCardNumber + ",")
 				case RANDOM:
+					rowBuilder.WriteString(getCreditCardNumber(jsonAttr) + ",")
 				}
 			case "zipcode":
 				switch dataGenType[jsonAttr["name"].(string)] {
@@ -383,4 +400,13 @@ func getBlankRowPercentage(blankPer int) int {
 		return 0
 	}
 	return int(math.Round(float64(numOfRows) / blankRows))
+}
+
+func getCreditCardNumber(entry map[string]interface{}) string {
+	cctype := strings.TrimSpace(entry["cctype"].(string))
+	if strings.EqualFold(cctype, "any") {
+		return gofakeit.CreditCardNumber(&gofakeit.CreditCardOptions{Types: []string{}, Gaps: true})
+	} else {
+		return gofakeit.CreditCardNumber(&gofakeit.CreditCardOptions{Types: []string{cctype}, Gaps: true})
+	}
 }

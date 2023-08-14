@@ -8,7 +8,7 @@
 		"short-range":["t", "f"]
 	},
 	"creditcard":{
-		"cctypes":["visa", "mastercard", "discover", "american_express", "diners_club", "jcb", "switch", "solo", "dankort", "forbrugsforeningen", "laser"]
+		"cctypes":["visa", "mastercard", "american-express", "diners-club", "discover", "jcb", "unionpay", "maestro", "elo", "hiper", "hipercard"]
 	},
 	"uuid":{
 		"uuid":"[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}"
