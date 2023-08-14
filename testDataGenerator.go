@@ -237,14 +237,48 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
+					emailId := person.Contact.Email
+					mu.Lock()
+					emailList, found := (*attrLookups)[jsonAttr["name"].(string)]
+					if found {
+						for slices.Contains(emailList, emailId) {
+							emailId = gofakeit.Person().Contact.Email
+						}
+					} else {
+						emailList = make([]string, numOfRows)
+					}
+					emailList = append(emailList, emailId)
+					mu.Unlock()
+					mu.Lock()
+					(*attrLookups)[jsonAttr["name"].(string)] = emailList
+					mu.Unlock()
+					rowBuilder.WriteString(emailId + ",")
 				case RANDOM:
+					rowBuilder.WriteString(person.Contact.Email + ",")
 				}
 			case "phonenumber":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
 				case NATURAL_SEQ:
+					phoneNumber := person.Contact.Phone
+					mu.Lock()
+					phoneNumList, found := (*attrLookups)[jsonAttr["name"].(string)]
+					if found {
+						for slices.Contains(phoneNumList, phoneNumber) {
+							phoneNumber = gofakeit.Person().Contact.Phone
+						}
+					} else {
+						phoneNumList = make([]string, numOfRows)
+					}
+					phoneNumList = append(phoneNumList, phoneNumber)
+					mu.Unlock()
+					mu.Lock()
+					(*attrLookups)[jsonAttr["name"].(string)] = phoneNumList
+					mu.Unlock()
+					rowBuilder.WriteString(phoneNumber + ",")
 				case RANDOM:
+					rowBuilder.WriteString(person.Contact.Phone + ",")
 				}
 			case "aadhar":
 				switch dataGenType[jsonAttr["name"].(string)] {
@@ -346,8 +380,13 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
 					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
-				case NATURAL_SEQ:
+				case DUP_IN_RANGE:
+					timestampRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
+					timestampMin, _ := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[0])
+					timestampMax, _ := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[1])
+					rowBuilder.WriteString(gofakeit.DateRange(timestampMin, timestampMax).Format(jsonAttr["timestamp_format"].(string)) + ",")
 				case RANDOM:
+					rowBuilder.WriteString(gofakeit.Date().Format(jsonAttr["timestamp_format"].(string)) + ",")
 				}
 			}
 		}
