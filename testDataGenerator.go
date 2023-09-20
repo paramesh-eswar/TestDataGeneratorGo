@@ -32,7 +32,7 @@ func testDataGenerator() string {
 	processedRowCount = 1
 	var rowBuilder strings.Builder
 	for _, jsonAttr := range metaDataJson {
-		rowBuilder.WriteString(jsonAttr["name"].(string) + ",")
+		rowBuilder.WriteString(jsonAttr["name"].(string) + DELIMITER)
 	}
 	headerRow := rowBuilder.String()
 	headerRow = headerRow[:len(headerRow)-1]
@@ -102,113 +102,113 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 			case "number":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
-					rowBuilder.WriteString(fmt.Sprint(i) + ",")
+					rowBuilder.WriteString(fmt.Sprint(i) + DELIMITER)
 				case SEQ_IN_RANGE:
 					numRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					numMin, _ := strconv.Atoi(numRange[0])
-					rowBuilder.WriteString(fmt.Sprint(numMin+(i-1)) + ",")
+					rowBuilder.WriteString(fmt.Sprint(numMin+(i-1)) + DELIMITER)
 				case DUP_IN_RANGE:
 					numRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					numMin, _ := strconv.Atoi(numRange[0])
 					numMax, _ := strconv.Atoi(numRange[1])
 					rand.NewSource(time.Now().UnixNano())
-					rowBuilder.WriteString(fmt.Sprint(numMin+rand.Intn(numMax-numMin)) + ",")
+					rowBuilder.WriteString(fmt.Sprint(numMin+rand.Intn(numMax-numMin)) + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(fmt.Sprint(gofakeit.Number(1, numOfRows)) + ",")
+					rowBuilder.WriteString(fmt.Sprint(gofakeit.Number(1, numOfRows)) + DELIMITER)
 					// rand.NewSource(time.Now().UnixNano())
-					// rowBuilder.WriteString(fmt.Sprint(1+rand.Intn(numOfRows-1)) + ",")
+					// rowBuilder.WriteString(fmt.Sprint(1+rand.Intn(numOfRows-1)) + DELIMITER)
 				}
 			case "text":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
-					rowBuilder.WriteString(jsonAttr["name"].(string) + fmt.Sprint(i) + ",")
+					rowBuilder.WriteString(jsonAttr["name"].(string) + fmt.Sprint(i) + DELIMITER)
 				case SEQ_IN_RANGE:
 					textRange := jsonAttr["range"].([]interface{})
-					rowBuilder.WriteString(textRange[i-1].(string) + ",")
+					rowBuilder.WriteString(textRange[i-1].(string) + DELIMITER)
 				case DUP_IN_RANGE:
 					textRange := jsonAttr["range"].([]interface{})
 					rand.NewSource(time.Now().UnixNano())
-					rowBuilder.WriteString(textRange[rand.Intn(len(textRange))].(string) + ",")
+					rowBuilder.WriteString(textRange[rand.Intn(len(textRange))].(string) + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(gofakeit.Word() + ",")
+					rowBuilder.WriteString(gofakeit.Word() + DELIMITER)
 				}
 			case "float":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					scale, _ := strconv.Atoi(strings.TrimSpace(jsonAttr["scale"].(string)))
-					rowBuilder.WriteString(strconv.FormatFloat(float64(i), 'f', scale, 64) + ",")
+					rowBuilder.WriteString(strconv.FormatFloat(float64(i), 'f', scale, 64) + DELIMITER)
 				case SEQ_IN_RANGE:
 					scale, _ := strconv.Atoi(strings.TrimSpace(jsonAttr["scale"].(string)))
 					floatRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					floatMin, _ := strconv.ParseFloat(floatRange[0], 64)
-					rowBuilder.WriteString(strconv.FormatFloat(floatMin+float64(i-1), 'f', scale, 64) + ",")
+					rowBuilder.WriteString(strconv.FormatFloat(floatMin+float64(i-1), 'f', scale, 64) + DELIMITER)
 				case DUP_IN_RANGE:
 					scale, _ := strconv.Atoi(strings.TrimSpace(jsonAttr["scale"].(string)))
 					floatRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					floatMin, _ := strconv.ParseFloat(floatRange[0], 64)
 					floatMax, _ := strconv.ParseFloat(floatRange[1], 64)
 					rand.NewSource(time.Now().UnixNano())
-					rowBuilder.WriteString(strconv.FormatFloat(floatMin+rand.NormFloat64()*(floatMax-floatMin), 'f', scale, 64) + ",")
+					rowBuilder.WriteString(strconv.FormatFloat(floatMin+rand.NormFloat64()*(floatMax-floatMin), 'f', scale, 64) + DELIMITER)
 				case RANDOM:
 					scale, _ := strconv.Atoi(strings.TrimSpace(jsonAttr["scale"].(string)))
-					rowBuilder.WriteString(strconv.FormatFloat(gofakeit.Float64Range(0, float64(numOfRows)), 'f', scale, 64) + ",")
+					rowBuilder.WriteString(strconv.FormatFloat(gofakeit.Float64Range(0, float64(numOfRows)), 'f', scale, 64) + DELIMITER)
 				}
 			case "date":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case DUP_IN_RANGE:
 					dateRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					dateMin, _ := time.Parse(jsonAttr["date_format"].(string), dateRange[0])
 					dateMax, _ := time.Parse(jsonAttr["date_format"].(string), dateRange[1])
 					// duration := dateMax.Sub(dateMin)
 					// randDuration := time.Duration(rand.Int63n(int64(duration)))
-					// rowBuilder.WriteString(dateMin.Add(randDuration).Format(jsonAttr["date_format"].(string)) + ",")
-					rowBuilder.WriteString(gofakeit.DateRange(dateMin, dateMax).Format(jsonAttr["date_format"].(string)) + ",")
+					// rowBuilder.WriteString(dateMin.Add(randDuration).Format(jsonAttr["date_format"].(string)) + DELIMITER)
+					rowBuilder.WriteString(gofakeit.DateRange(dateMin, dateMax).Format(jsonAttr["date_format"].(string)) + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(gofakeit.Date().Format(jsonAttr["date_format"].(string)) + ",")
+					rowBuilder.WriteString(gofakeit.Date().Format(jsonAttr["date_format"].(string)) + DELIMITER)
 				}
 			case "gender":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case RANDOM:
-					// rowBuilder.WriteString(person.Gender + ",")
+					// rowBuilder.WriteString(person.Gender + DELIMITER)
 					genderFormat := strings.TrimSpace(jsonAttr["format"].(string))
 					rand.NewSource(time.Now().UnixNano())
 					if strings.EqualFold(genderFormat, "long") {
 						longGenders := (descriptorJson["gender"].(map[string]interface{}))["range"].([]interface{})
-						rowBuilder.WriteString(longGenders[rand.Intn(len(longGenders))].(string) + ",")
+						rowBuilder.WriteString(longGenders[rand.Intn(len(longGenders))].(string) + DELIMITER)
 					} else {
 						shortGenders := (descriptorJson["gender"].(map[string]interface{}))["short-range"].([]interface{})
-						rowBuilder.WriteString(shortGenders[rand.Intn(len(shortGenders))].(string) + ",")
+						rowBuilder.WriteString(shortGenders[rand.Intn(len(shortGenders))].(string) + DELIMITER)
 					}
 				}
 			case "boolean":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case RANDOM:
 					boolFormat := strings.TrimSpace(jsonAttr["format"].(string))
 					rand.NewSource(time.Now().UnixNano())
 					if strings.EqualFold(boolFormat, "long") {
 						longBool := (descriptorJson["boolean"].(map[string]interface{}))["range"].([]interface{})
-						rowBuilder.WriteString(longBool[rand.Intn(len(longBool))].(string) + ",")
+						rowBuilder.WriteString(longBool[rand.Intn(len(longBool))].(string) + DELIMITER)
 					} else {
 						shortBool := (descriptorJson["boolean"].(map[string]interface{}))["short-range"].([]interface{})
-						rowBuilder.WriteString(shortBool[rand.Intn(len(shortBool))].(string) + ",")
+						rowBuilder.WriteString(shortBool[rand.Intn(len(shortBool))].(string) + DELIMITER)
 					}
 				}
 			case "ssn":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					// ssnRegEx := `^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$`
 					ssnRegEx := (descriptorJson["ssn"].(map[string]interface{}))["format"].(string)
@@ -227,15 +227,15 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Lock()
 					(*attrLookups)[jsonAttr["name"].(string)] = ssnList
 					mu.Unlock()
-					rowBuilder.WriteString(ssnVal + ",")
+					rowBuilder.WriteString(ssnVal + DELIMITER)
 				case RANDOM:
 					ssnRegEx := (descriptorJson["ssn"].(map[string]interface{}))["format"].(string)
-					rowBuilder.WriteString(gofakeit.Regex(ssnRegEx) + ",")
+					rowBuilder.WriteString(gofakeit.Regex(ssnRegEx) + DELIMITER)
 				}
 			case "email":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					emailId := person.Contact.Email
 					mu.Lock()
@@ -252,14 +252,14 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Lock()
 					(*attrLookups)[jsonAttr["name"].(string)] = emailList
 					mu.Unlock()
-					rowBuilder.WriteString(emailId + ",")
+					rowBuilder.WriteString(emailId + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(person.Contact.Email + ",")
+					rowBuilder.WriteString(person.Contact.Email + DELIMITER)
 				}
 			case "phonenumber":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					phoneNumber := person.Contact.Phone
 					mu.Lock()
@@ -276,14 +276,14 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Lock()
 					(*attrLookups)[jsonAttr["name"].(string)] = phoneNumList
 					mu.Unlock()
-					rowBuilder.WriteString(phoneNumber + ",")
+					rowBuilder.WriteString(phoneNumber + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(person.Contact.Phone + ",")
+					rowBuilder.WriteString(person.Contact.Phone + DELIMITER)
 				}
 			case "aadhar":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					aadharRegEx := (descriptorJson["aadhar"].(map[string]interface{}))["format"].(string)
 					aadharNum := gofakeit.Regex(aadharRegEx)
@@ -301,15 +301,15 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Lock()
 					(*attrLookups)[jsonAttr["name"].(string)] = aadharList
 					mu.Unlock()
-					rowBuilder.WriteString(aadharNum + ",")
+					rowBuilder.WriteString(aadharNum + DELIMITER)
 				case RANDOM:
 					aadharRegEx := (descriptorJson["aadhar"].(map[string]interface{}))["format"].(string)
-					rowBuilder.WriteString(gofakeit.Regex(aadharRegEx) + ",")
+					rowBuilder.WriteString(gofakeit.Regex(aadharRegEx) + DELIMITER)
 				}
 			case "creditcard":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case NATURAL_SEQ:
 					creditCardNumber := getCreditCardNumber(jsonAttr)
 					mu.Lock()
@@ -326,14 +326,14 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					mu.Lock()
 					(*attrLookups)[jsonAttr["name"].(string)] = creditCardNumList
 					mu.Unlock()
-					rowBuilder.WriteString(creditCardNumber + ",")
+					rowBuilder.WriteString(creditCardNumber + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(getCreditCardNumber(jsonAttr) + ",")
+					rowBuilder.WriteString(getCreditCardNumber(jsonAttr) + DELIMITER)
 				}
 			case "zipcode":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case RANDOM:
 					countryName := person.Address.Country
 					fmt.Println(countryName)
@@ -341,22 +341,22 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 					if len(postalMap["Regex"]) > 0 {
 						zip, _ := regexp.Compile(postalMap["Regex"])
 						fmt.Println(zip.MatchString(gofakeit.Regex(postalMap["Regex"])))
-						rowBuilder.WriteString(gofakeit.Regex(postalMap["Regex"]) + ",")
+						rowBuilder.WriteString(gofakeit.Regex(postalMap["Regex"]) + DELIMITER)
 					} else {
-						rowBuilder.WriteString(person.Address.Zip + ",")
+						rowBuilder.WriteString(person.Address.Zip + DELIMITER)
 					}
 				}
 			case "uuid":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(gofakeit.UUID() + ",")
+					rowBuilder.WriteString(gofakeit.UUID() + DELIMITER)
 				}
 			case "ipaddress":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case RANDOM:
 					iptypes := (descriptorJson["ipaddress"].(map[string]interface{}))["iptypes"].([]interface{})
 					iptypesList := make([]string, len(iptypes))
@@ -364,29 +364,29 @@ func sendeRecord(tdgChannel chan string, wg *sync.WaitGroup, rowCount, endCount 
 						iptypesList[i] = fmt.Sprintf(v.(string))
 					}
 					if strings.EqualFold(strings.TrimSpace(jsonAttr["ipaddress_type"].(string)), "ipv4") {
-						rowBuilder.WriteString(gofakeit.IPv4Address() + ",")
+						rowBuilder.WriteString(gofakeit.IPv4Address() + DELIMITER)
 					} else if strings.EqualFold(strings.TrimSpace(jsonAttr["ipaddress_type"].(string)), "ipv6") {
-						rowBuilder.WriteString(gofakeit.IPv6Address() + ",")
+						rowBuilder.WriteString(gofakeit.IPv6Address() + DELIMITER)
 					} else {
 						rand.NewSource(time.Now().UnixNano())
 						if rand.Intn(2) == 0 {
-							rowBuilder.WriteString(gofakeit.IPv4Address() + ",")
+							rowBuilder.WriteString(gofakeit.IPv4Address() + DELIMITER)
 						} else {
-							rowBuilder.WriteString(gofakeit.IPv6Address() + ",")
+							rowBuilder.WriteString(gofakeit.IPv6Address() + DELIMITER)
 						}
 					}
 				}
 			case "timestamp":
 				switch dataGenType[jsonAttr["name"].(string)] {
 				case DEFAULT:
-					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + ",")
+					rowBuilder.WriteString(strings.TrimSpace(jsonAttr["default_value"].(string)) + DELIMITER)
 				case DUP_IN_RANGE:
 					timestampRange := strings.Split(strings.TrimSpace(jsonAttr["range"].(string)), "~")
 					timestampMin, _ := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[0])
 					timestampMax, _ := time.Parse(jsonAttr["timestamp_format"].(string), timestampRange[1])
-					rowBuilder.WriteString(gofakeit.DateRange(timestampMin, timestampMax).Format(jsonAttr["timestamp_format"].(string)) + ",")
+					rowBuilder.WriteString(gofakeit.DateRange(timestampMin, timestampMax).Format(jsonAttr["timestamp_format"].(string)) + DELIMITER)
 				case RANDOM:
-					rowBuilder.WriteString(gofakeit.Date().Format(jsonAttr["timestamp_format"].(string)) + ",")
+					rowBuilder.WriteString(gofakeit.Date().Format(jsonAttr["timestamp_format"].(string)) + DELIMITER)
 				}
 			}
 		}
